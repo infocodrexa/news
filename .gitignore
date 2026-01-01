@@ -1,0 +1,15 @@
+# Dependencies (Inko upload nahi karna)
+node_modules/
+*/node_modules/
+*/*/node_modules/
+
+# Environment Variables (Secrets hidden rakho)
+.env
+*/.env
+
+# Next.js & Build folders
+.next/
+*/.next/
+dist/
+build/
+.DS_Store
