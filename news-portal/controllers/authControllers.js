@@ -261,46 +261,87 @@ const path = require('path')
 
 class authController {
 
-    login = async (req, res) => {
-        const { email, password } = req.body
+    // login = async (req, res) => {
+    //     const { email, password } = req.body
 
-        if (!email) {
-            return res.status(404).json({ message: 'Please provide your email' })
-        }
-        if (!password) {
-            return res.status(404).json({ message: 'Please provide your password' })
-        }
+    //     if (!email) {
+    //         return res.status(404).json({ message: 'Please provide your email' })
+    //     }
+    //     if (!password) {
+    //         return res.status(404).json({ message: 'Please provide your password' })
+    //     }
 
-        try {
-            const user = await authModel.findOne({ email }).select('+password')
-            if (user) {
-                const match = await bcrypt.compare(password, user.password)
-                if (match) {
-                    const obj = {
-                        id: user.id,
-                        name: user.name,
-                        category: user.category,
-                        role: user.role,
-                        email: user.email,
-                        image: user.image
-                    }
-                    const token = await jwt.sign(obj, process.env.secret, {
-                        expiresIn: process.env.exp_time
-                    })
-                    return res.status(200).json({ message: 'login success', token })
-                } else {
-                    return res.status(404).json({ message: 'invalid password' })
-                }
-            } else {
-                return res.status(404).json({ message: 'user not found' })
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //     try {
+    //         const user = await authModel.findOne({ email }).select('+password')
+    //         if (user) {
+    //             const match = await bcrypt.compare(password, user.password)
+    //             if (match) {
+    //                 const obj = {
+    //                     id: user.id,
+    //                     name: user.name,
+    //                     category: user.category,
+    //                     role: user.role,
+    //                     email: user.email,
+    //                     image: user.image
+    //                 }
+    //                 const token = await jwt.sign(obj, process.env.secret, {
+    //                     expiresIn: process.env.exp_time
+    //                 })
+    //                 return res.status(200).json({ message: 'login success', token })
+    //             } else {
+    //                 return res.status(404).json({ message: 'invalid password' })
+    //             }
+    //         } else {
+    //             return res.status(404).json({ message: 'user not found' })
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     // 👇 PROFILE IMAGE UPLOAD (Multer Version)
     // Cloudinary Logic Hata diya hai, ab Local Storage use hoga
+    
+    login = async (req, res) => {
+    const { email, password } = req.body
+
+    if (!email) {
+        return res.status(404).json({ message: 'Please provide your email' })
+    }
+    if (!password) {
+        return res.status(404).json({ message: 'Please provide your password' })
+    }
+
+    try {
+        const user = await authModel.findOne({ email }).select('+password')
+        if (user) {
+            const match = await bcrypt.compare(password, user.password)
+            if (match) {
+                const obj = {
+                    id: user.id,
+                    name: user.name,
+                    category: user.category,
+                    role: user.role,
+                    email: user.email,
+                    image: user.image
+                }
+                const token = await jwt.sign(obj, process.env.secret, {
+                    expiresIn: process.env.exp_time
+                })
+                
+                // 👇 Yahan humne 'role: user.role' add kar diya hai
+                return res.status(200).json({ message: 'login success', token, role: user.role })
+                
+            } else {
+                return res.status(404).json({ message: 'invalid password' })
+            }
+        } else {
+            return res.status(404).json({ message: 'user not found' })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
     profile_image_upload = async (req, res) => {
         
         try {
