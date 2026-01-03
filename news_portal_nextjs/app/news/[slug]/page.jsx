@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Breadcrumb from "@/components/Breadcrumb";
 import Category from "@/components/Category";
 import Footer from "@/components/Footer";

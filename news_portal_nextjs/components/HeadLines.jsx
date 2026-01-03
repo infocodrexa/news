@@ -56,6 +56,8 @@
 
 // export default HeadLines
 
+export const dynamic = "force-dynamic";
+
 import React from 'react'
 import LoadingSpinner from 'react-spinners-components'
 import Marquee from 'react-fast-marquee'

@@ -11,3 +11,17 @@ if (mode === production) {
 }
 
 export { base_url }
+
+
+//server code 
+
+// const mode = development
+// let base_url = ''
+
+// if (mode === production) {
+//     base_url = ""
+// } else {
+//     base_url = 'https://api.thelocalmirror.in'
+// }
+
+// export { base_url }
