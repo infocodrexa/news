@@ -286,7 +286,6 @@
 //   );
 // };
 // export default Home;
-
 // Home page of the news website showing headlines, latest, popular and category-wise news
 
 import HeadLines from "@/components/HeadLines";
