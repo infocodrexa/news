@@ -2,35 +2,57 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-// Optional: Google Analytics ya AdSense script yahan import kar sakte hain
 
 const inter = Inter({ subsets: ["latin"] });
 
-// 👇 APNI WEBSITE KA ASLI DOMAIN YAHAN LIKHO (Zaruri hai)
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://thelocalmirror.com"; 
+// 👇 AB HUM ENVIRONMENT VARIABLE SE URL UTHAYENGE
+const currentSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://thelocalmirror.com";
 
 export const metadata = {
-  // 1. Dynamic Title (Har page par automatic " | The Local Mirror" jud jayega)
   title: {
-    default: "The Local Mirror - Latest News, Breaking Stories & Updates",
-    template: "%s | The Local Mirror", // Example: "Sports | The Local Mirror"
+    // 🔴 Edited: Title me Begusarai aur Bihar add kiya
+    default:
+      "The Local Mirror - Begusarai & Bihar News | Latest Updates & Breaking Stories",
+    template: "%s | The Local Mirror - Begusarai News",
   },
-  
-  // 2. Strong Description (Google Search me ye dikhega)
-  description: "Stay updated with The Local Mirror. Your trusted source for breaking news, politics, sports, entertainment, and local updates in Hindi and English.",
-  
-  // 3. Keywords (Search terms)
-  keywords: ["The Local Mirror", "News Portal", "Breaking News", "Hindi News", "Local Updates", "Politics", "Sports", "India News"],
 
-  // 4. Base URL (Images aur Links ke liye zaruri)
-  metadataBase: new URL(siteUrl),
+  // 🔴 Edited: Description me keywords dale
+  description:
+    "The Local Mirror is your trusted source for Begusarai News and Bihar Breaking News. Get real-time updates on politics, crime, sports, and local events in Begusarai district and across Bihar in Hindi and English.",
 
-  // 5. Authors & Creator
+  // 🔴 Edited: Begusarai aur Bihar ke tagde keywords
+  keywords: [
+    "The Local Mirror",
+    "Begusarai News",
+    "Begusarai Samachar",
+    "Begusarai Breaking News",
+    "Bihar News",
+    "Bihar Samachar",
+    "Begusarai District News",
+    "Barauni News",
+    "Simaria News",
+    "News in Hindi",
+    "Bihar Politics",
+    "Latest News Bihar",
+  ],
+
+  // ✅ 1. Metadata Base
+  metadataBase: new URL(currentSiteUrl),
+
+  // ✅ 2. Alternates
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-IN": "https://thelocalmirror.in",
+      "en-GLOBAL": "https://thelocalmirror.com",
+    },
+  },
+
   authors: [{ name: "The Local Mirror Team" }],
   creator: "The Local Mirror",
   publisher: "The Local Mirror Media",
 
-  // 6. Robots (Google ko allow karne ke liye)
   robots: {
     index: true,
     follow: true,
@@ -43,75 +65,78 @@ export const metadata = {
     },
   },
 
-  // 7. Open Graph (Facebook/WhatsApp par link share karne par kaisa dikhega)
   openGraph: {
-    title: "The Local Mirror - Latest News & Updates",
-    description: "Read the latest breaking news and local stories on The Local Mirror.",
-    url: siteUrl,
+    // 🔴 Edited: Social Media ke liye bhi title change kiya
+    title: "The Local Mirror - Begusarai & Bihar Latest News",
+    description:
+      "Read the latest breaking news from Begusarai, Patna, and all over Bihar on The Local Mirror.",
+    url: currentSiteUrl,
     siteName: "The Local Mirror",
     images: [
       {
-        url: "/assets/og-image.png", // 👈 Make sure public folder me ye image ho
+        url: "/assets/og-image.png",
         width: 1200,
         height: 630,
-        alt: "The Local Mirror News",
+        alt: "The Local Mirror - Begusarai News",
       },
     ],
-    locale: "en_IN", // Ya 'hi_IN' agar Hindi main hai
+    locale: "en_IN",
     type: "website",
   },
 
-  // 8. Twitter Card (Twitter par kaisa dikhega)
   twitter: {
     card: "summary_large_image",
-    title: "The Local Mirror",
-    description: "Your daily dose of local and national news.",
-    images: ["/assets/og-image.png"], // Same image
-    creator: "@TheLocalMirror", // Apna Twitter handle dalein
+    title: "The Local Mirror - Begusarai News",
+    description: "Top source for Begusarai and Bihar News updates.",
+    images: ["/assets/og-image.png"],
+    creator: "@TheLocalMirror",
   },
 
-  // 9. Icons (Favicon)
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  
-  // 10. Verification (Google Search Console)
+
   verification: {
-    google: "google-site-verification-code-here", // Search console se code leke yahan dalein
+    google: "google-site-verification-code-here",
   },
 };
 
 export default function RootLayout({ children }) {
-  // 👇 Organization Schema (Google ko batane ke liye ki ye ek News Company hai)
+  // 👇 Organization Schema (Isme Location Add kar di hai)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsMediaOrganization",
-    "name": "The Local Mirror",
-    "url": siteUrl,
-    "logo": {
+    name: "The Local Mirror",
+    url: currentSiteUrl,
+    logo: {
       "@type": "ImageObject",
-      "url": `${siteUrl}/assets/logo.png`, // Apna logo path sahi karein
-      "width": 600,
-      "height": 60
+      url: `${currentSiteUrl}/assets/logo.png`,
+      width: 600,
+      height: 60,
     },
-    "sameAs": [
-      "https://www.facebook.com/yourpage",
-      "https://twitter.com/yourhandle",
-      "https://www.instagram.com/yourhandle"
-    ]
+    // 🔴 Edited: Google ko bataya ki aap kahan service dete ho
+    areaServed: {
+      "@type": "Place",
+      name: ["Begusarai", "Bihar", "India"],
+    },
+    sameAs: [
+      "https://www.facebook.com/share/1DAyfVm8Uo/",
+      "https://x.com/TheLocalMirror",
+      "https://www.instagram.com/thelocalmirror",
+      "https://www.threads.net/@thelocalmirror",
+      "https://www.youtube.com/@TheLocalMirror",
+    ],
   };
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* Schema Script Inject */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        
         <Header />
         {children}
       </body>

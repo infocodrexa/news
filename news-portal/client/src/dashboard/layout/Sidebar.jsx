@@ -466,16 +466,24 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
       >
         {/* Logo Section */}
         <div className="h-[70px] flex justify-center items-center border-b border-gray-100">
-          <Link to="/" className="text-center uppercase leading-none">
+         <Link to='/dashboard' className='text-center uppercase leading-none'>
             
-            {/* 🔴 Edited: Yahan Text wala Logo hata kar Purana Image Logo lagaya hai */}
-            <img
-                className="w-[190px] h-[35px] object-contain"
-                src="https://news-portal-mern.onrender.com/assets/logo-00ebaab6.png"
-                alt="Logo"
-            />
+            {/* 'The' chota sa upar */}
+            <span className='block text-[9px] text-black font-bold tracking-[0.2em] mb-[-2px]'>
+                The
+            </span>
 
-          </Link>
+            {/* 'LOCAL' Red Color mein */}
+            <h1 className='text-2xl font-black text-red-600 tracking-tighter m-0'>
+                LOCAL
+            </h1>
+
+            {/* 'Mirror' letter spaced */}
+            <span className='block text-[11px] text-gray-800 font-bold tracking-[0.4em] mt-[-4px] ml-[2px]'>
+                MIRROR
+            </span>
+
+        </Link>
         </div>
 
         {/* Navigation Links (Scrollable area) */}
