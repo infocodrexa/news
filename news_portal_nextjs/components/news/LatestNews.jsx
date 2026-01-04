@@ -8,7 +8,6 @@ import { base_api_url } from '@/config/config';
 
 const LatestNews = () => {
 
-    // Initial state hamesha empty array rakho
     const [news, setNews] = useState([])
 
     const responsive = {
@@ -22,7 +21,6 @@ const LatestNews = () => {
         try {
             const res = await fetch(`${base_api_url}/api/latest/news`)
             const data = await res.json()
-            // Agar data.news undefined ho toh empty array set ho jaye
             setNews(data.news || [])
         } catch (error) {
             console.log("Fetch Error:", error)
@@ -51,7 +49,6 @@ const LatestNews = () => {
 
     return (
         <div className='w-full flex flex-col-reverse gap-3 pr-0 lg:pr-2'>
-            {/* Condition: Map tabhi chale jab news array mein data ho */}
             {news && news.length > 0 ? (
                 <Carousel
                     autoPlay={true}
@@ -63,14 +60,20 @@ const LatestNews = () => {
                     transitionDuration={500}
                 >
                     {
-                        // Safe mapping with optional chaining
-                        news?.map((item, i) => (
-                            <SimpleNewsCard item={item} key={i} type='latest' />
-                        ))
+                        news?.map((item, i) => {
+                             // ✅ FIX: Image URL yahan banakar bhej rahe hain
+                             const fixedItem = {
+                                ...item,
+                                image: item.image 
+                                    ? (item.image.startsWith('http') ? item.image : `${base_api_url}/uploads/${item.image}`) 
+                                    : "https://via.placeholder.com/400x200"
+                             };
+                             
+                             return <SimpleNewsCard item={fixedItem} key={i} type='latest' />
+                        })
                     }
                 </Carousel>
             ) : (
-                // Jab tak data load ho raha hai, tab tak ye dikhega
                 <div className="w-full h-[200px] flex items-center justify-center text-slate-400 border border-dashed rounded-md">
                     Loading latest news...
                 </div>
