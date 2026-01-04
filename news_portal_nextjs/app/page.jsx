@@ -1,7 +1,10 @@
+// export const dynamic = "force-dynamic";
+
+
 // import HeadLines from "@/components/HeadLines";
 // import Title from "@/components/Title";
 // import DetailsNews from "@/components/news/DetailsNews";
-// import DetailsNewsCol from "@/components/news/DetailsNewsCOl";
+// import DetailsNewsCol from "@/components/news/DetailsNewsCol";
 // import DetailsNewsRow from "@/components/news/DetailsNewsRow";
 // import LatestNews from "@/components/news/LatestNews";
 // import PopularNews from "@/components/news/PopularNews";
@@ -19,14 +22,13 @@
 //     },
 //   });
 
-//   // ✅ SAME SAFETY AS UPPER CODE
 //   const res = await news_data?.json();
 //   const news = res?.news || {};
 
 //   return (
 //     <div>
 //       <main>
-//         {/* 🔥 MODAL + TOP AD (NO CHANGE) */}
+//         {/* 🔥 MODAL + TOP AD */}
 //         <ModalAd />
 //         <SlideInAd position="home" />
 
@@ -56,7 +58,7 @@
 
 //             {/* ===================== POPULAR ===================== */}
 //             <div className="mt-10">
-//               <PopularNews type="Popular news" news={news["Travel"] || []} />
+//               <PopularNews type="Popular News" news={news["Travel"] || []} />
 //             </div>
 
 //             {/* ===================== FIRST SECTION ===================== */}
@@ -89,7 +91,6 @@
 //             {/* ===================== SECOND SECTION ===================== */}
 //             <div className="w-full mt-10">
 //               <div className="flex flex-wrap">
-
 //                 <div className="w-full lg:w-4/12">
 //                   <SlideInAd position="sidebar" />
 
@@ -123,7 +124,6 @@
 //             {/* ===================== THIRD SECTION ===================== */}
 //             <div className="w-full mt-10">
 //               <div className="flex flex-wrap">
-
 //                 <div className="w-full lg:w-8/12">
 //                   <DetailsNewsRow
 //                     news={news["Technology"] || []}
@@ -134,7 +134,7 @@
 
 //                 <div className="w-full lg:w-4/12">
 //                   <div className="pl-0 lg:pl-2">
-//                     <Title title="Recent news" />
+//                     <Title title="Recent News" />
 
 //                     <div className="grid grid-cols-1 gap-y-[14px] mt-4">
 //                       {(news["Sports"] || []).slice(0, 4).map((item, i) => (
@@ -143,7 +143,6 @@
 //                     </div>
 //                   </div>
 //                 </div>
-
 //               </div>
 //             </div>
 
@@ -158,9 +157,7 @@
 
 // export default Home;
 
-
 export const dynamic = "force-dynamic";
-
 
 import HeadLines from "@/components/HeadLines";
 import Title from "@/components/Title";
@@ -177,14 +174,32 @@ import SlideInAd from "@/components/ads/SlideInAd";
 import ModalAd from "@/components/ads/ModalAd";
 
 const Home = async () => {
-  const news_data = await fetch(`${base_api_url}/api/all/news`, {
-    next: {
-      revalidate: 5,
-    },
-  });
+  let news = {};
+  let recentNews = [];
 
-  const res = await news_data?.json();
-  const news = res?.news || {};
+  // 1. Fetch All News
+  try {
+    const news_data = await fetch(`${base_api_url}/api/all/news`, {
+      next: { revalidate: 5 },
+    });
+    const news_response = await news_data.json();
+    news = news_response?.news || {}; 
+  } catch (error) {
+    console.log("Error fetching All News:", error); // Ye Rehne do (Zaroori hai)
+  }
+
+  // 2. Fetch Recent News
+  try {
+    const recent_news_data = await fetch(`${base_api_url}/api/latest/news`, {
+      next: { revalidate: 5 },
+    });
+    const recent_news_res = await recent_news_data.json();
+    
+    // ✅ Debug Console hata diya hai taaki server clean rahe
+    recentNews = recent_news_res?.news || [];
+  } catch (error) {
+    console.log("Error fetching Recent News:", error); // Ye Rehne do
+  }
 
   return (
     <div>
@@ -193,7 +208,8 @@ const Home = async () => {
         <ModalAd />
         <SlideInAd position="home" />
 
-        <HeadLines news={news} />
+        {/* Headlines: Only show if news exists */}
+        {Object.keys(news).length > 0 && <HeadLines news={news} />}
 
         <div className="bg-slate-100">
           <div className="px-4 md:px-8 py-8">
@@ -293,14 +309,19 @@ const Home = async () => {
                   />
                 </div>
 
+                {/* 👇 RECENT NEWS SECTION */}
                 <div className="w-full lg:w-4/12">
                   <div className="pl-0 lg:pl-2">
                     <Title title="Recent News" />
 
                     <div className="grid grid-cols-1 gap-y-[14px] mt-4">
-                      {(news["Sports"] || []).slice(0, 4).map((item, i) => (
-                        <NewsCard key={i} item={item} />
-                      ))}
+                      {recentNews && recentNews.length > 0 ? (
+                        recentNews.slice(0, 3).map((item, i) => (
+                          <NewsCard key={i} item={item} />
+                        ))
+                      ) : (
+                        <p className="text-gray-500 text-sm">No recent news found</p>
+                      )}
                     </div>
                   </div>
                 </div>
