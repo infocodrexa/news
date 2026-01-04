@@ -6,16 +6,17 @@ const SimpleNewsCard = ({ item, type }) => {
 
     const getImageUrl = (img) => {
         if (!img) return "https://via.placeholder.com/600x400";
-        if (img.startsWith("http") || img.startsWith("https")) return img;
+        if (img.startsWith("http")) return img;
         return `${base_api_url}/uploads/${img}`;
     };
 
     return (
         <div className='group relative'>
             <div className='overflow-hidden'>
+                {/* Style Logic Same Rakha Hai */}
                 <div className={`${type ? 'h-[270px] sm:h-[470px]' : 'h-[228px]'} w-full group-hover:scale-[1.1] transition-all duration-[1s] relative`}>
                     
-                    {/* ✅ Design same rakha hai (absolute + w-full + h-full) */}
+                    {/* ✅ Style Fix: absolute + w-full + h-full (Same as layout fill) */}
                     <img 
                         src={getImageUrl(item?.image)} 
                         alt='images' 

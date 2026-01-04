@@ -4,27 +4,26 @@ import { base_api_url } from "@/config/config";
 const { convert } = require("html-to-text");
 
 const SimpleDetailsNewCard = ({ news, type, height }) => {
-  
-  // ✅ Sirf ye URL fix naya hai, baaki sab purana style hai
+
   const getImageUrl = (img) => {
     if (!img) return "https://via.placeholder.com/600x400";
-    if (img.startsWith("http") || img.startsWith("https")) return img;
+    if (img.startsWith("http")) return img;
     return `${base_api_url}/uploads/${img}`;
   };
 
   return (
     <div className="bg-white shadow">
       <div className="group relative overflow-hidden">
-        {/* Container Height maintain rahegi */}
+        {/* Style Fix: Height logic same rakha hai */}
         <div
           style={{ height: `${height}px` }}
           className={`w-full group-hover:scale-[1.1] transition-all duration-[1s] relative`}
         >
-          {/* ✅ Style Wapas: 'absolute' + 'w-full h-full' lagaya taaki original design wapas aa jaye */}
+          {/* ✅ Style Fix: absolute + w-full + h-full */}
           <img 
             src={getImageUrl(news?.image)} 
             alt={news?.title || "News"}
-            className="absolute left-0 top-0 w-full h-full object-cover" 
+            className="absolute top-0 left-0 w-full h-full object-cover" 
           />
         </div>
         

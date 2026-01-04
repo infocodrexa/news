@@ -4,40 +4,26 @@ import { base_api_url } from "@/config/config";
 
 const NewsCard = ({ item }) => {
   
-  // Image Fix
+  // Image URL Fix
   const getImageUrl = (img) => {
     if (!img) return "https://via.placeholder.com/150";
     if (img.startsWith("http") || img.startsWith("https")) return img;
     return `${base_api_url}/uploads/${img}`;
   };
 
-  // ✅ FIX 3: Time Fixer
-  // Agar 'date' timestamp hai to use Indian Time me badal dega.
-  const formatDate = (dateString) => {
-      try {
-          const date = new Date(dateString);
-          // Agar valid date hai to format karo, nahi to waisa hi dikhao
-          if(isNaN(date.getTime())) return dateString;
-          return date.toLocaleString('en-IN', {
-              timeZone: 'Asia/Kolkata',
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric'
-          });
-      } catch (e) {
-          return dateString;
-      }
-  };
-
   return (
     <div className="bg-white shadow flex p-4">
       <div className="relative group overflow-hidden h-full">
+        {/* Style Fix: width/height maintain kiya */}
         <div className="group-hover:scale-[1.1] transition-all duration-[1s] w-[100px] md:w-[160px] h-[93px] lg:w-[100px] relative">
+          
+          {/* ✅ Image Tag with layout='fill' replacement (absolute + w-full + h-full) */}
           <img
             src={getImageUrl(item?.image)}
             alt="images"
             className="absolute top-0 left-0 w-full h-full object-cover"
           />
+          
           <div className="w-full h-full block absolute left-0 top-0 invisible group-hover:visible bg-white cursor-pointer opacity-5 transition-all duration-300"></div>
         </div>
       </div>
@@ -53,8 +39,7 @@ const NewsCard = ({ item }) => {
           {item?.title}
         </Link>
         <div className="flex gap-x-2 text-xs font-normal text-slate-600">
-          {/* Yahan naya Date logic lagaya hai */}
-          <span>{formatDate(item?.date)}</span>
+          <span>{item?.date}</span>
           <span>{item?.writerName}</span>
         </div>
       </div>
