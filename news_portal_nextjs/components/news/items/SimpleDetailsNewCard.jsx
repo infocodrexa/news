@@ -1,12 +1,11 @@
 import React from "react";
 import Link from "next/link";
-// ✅ Sahi import path (@ alias use kiya hai taaki path error na aaye)
-import { base_api_url } from "@/config/config"; 
+import { base_api_url } from "@/config/config";
 const { convert } = require("html-to-text");
 
 const SimpleDetailsNewCard = ({ news, type, height }) => {
-
-  // ✅ Image Logic: Check karega ki link http hai ya uploads folder ka hai
+  
+  // ✅ Sirf ye URL fix naya hai, baaki sab purana style hai
   const getImageUrl = (img) => {
     if (!img) return "https://via.placeholder.com/600x400";
     if (img.startsWith("http") || img.startsWith("https")) return img;
@@ -16,15 +15,16 @@ const SimpleDetailsNewCard = ({ news, type, height }) => {
   return (
     <div className="bg-white shadow">
       <div className="group relative overflow-hidden">
+        {/* Container Height maintain rahegi */}
         <div
           style={{ height: `${height}px` }}
-          className={`w-full group-hover:scale-[1.1] transition-all duration-[1s]`}
+          className={`w-full group-hover:scale-[1.1] transition-all duration-[1s] relative`}
         >
-          {/* ✅ Simple Image Tag (Next/Image hataya error rokne ke liye) */}
+          {/* ✅ Style Wapas: 'absolute' + 'w-full h-full' lagaya taaki original design wapas aa jaye */}
           <img 
             src={getImageUrl(news?.image)} 
             alt={news?.title || "News"}
-            className="w-full h-full object-cover" 
+            className="absolute left-0 top-0 w-full h-full object-cover" 
           />
         </div>
         
@@ -42,6 +42,7 @@ const SimpleDetailsNewCard = ({ news, type, height }) => {
           )}
         </div>
       </div>
+      
       <div className="p-5">
         <Link
           className="text-[15px] font-semibold text-[#333333] hover:text-[#c80000]"

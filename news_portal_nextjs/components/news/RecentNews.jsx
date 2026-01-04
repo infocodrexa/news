@@ -5,32 +5,28 @@ import { base_api_url } from '../../config/config'
 
 const RecentNews = async () => {
 
-    // Note: Agar API endpoint '/api/latest/news' hai to wahi use karein, 
-    // maine apke code ke hisab se '/api/recent/news' rakha hai.
-    const res = await fetch(`${base_api_url}/api/recent/news`, {
-        next: {
-            revalidate: 1
-        }
-    })
-    
-    // Safety check: Agar API fail hui to crash na ho
     let news = [];
     try {
+        const res = await fetch(`${base_api_url}/api/recent/news`, {
+            next: { revalidate: 1 }
+        });
         const data = await res.json();
         news = data.news || [];
     } catch (error) {
-        console.log("Recent News Fetch Error:", error);
+        console.log("Recent News Error:", error);
     }
 
     return (
-        <div className="w-full flex flex-col gap-y-[14px] bg-white pt-4">
-            <div className="pl-4">
+        // ✅ FIX 2: 'pt-4' hata diya gaya hai.
+        // Ab ye section upar se chipak ke aayega aur Slider ke barabar dikhega.
+        <div className="w-full flex flex-col gap-y-[14px] bg-white">
+            <div className="pl-4 pt-4"> 
                 <Title title="Recent news" />
             </div>
             <div className="grid grid-cols-1 gap-y-3">
                 {
                     news && news.length > 0 && news.map((item, i) => {
-                        // ✅ FIX: Image URL Correct kiya
+                        // Image URL Fix
                         const fixedItem = {
                             ...item,
                             image: item.image 
