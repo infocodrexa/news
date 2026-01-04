@@ -74,13 +74,19 @@ export default function ModalAd() {
           >
             Close
           </button>
+     <a
+     href={
+    ad.redirectLink.startsWith('http') 
+    ? ad.redirectLink 
+    : `https://${ad.redirectLink}`
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  className="flex-1 py-2 rounded-full bg-blue-500 text-white text-sm text-center"
+  >
+  Open
+</a>
 
-          <a
-            href={ad.redirectLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 py-2 rounded-full bg-blue-500 text-white text-sm text-center"
-          >
             Open
           </a>
         </div>
