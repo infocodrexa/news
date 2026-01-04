@@ -245,12 +245,16 @@ const WriterEdit = ({ show, setShow, writerId, refreshWriters }) => {
                                             required
                                         >
                                             <option value="">-- Select Category --</option>
+                                            <option value="All">All</option>
                                             <option value="Education">Education</option>
                                             <option value="Travel">Travel</option>
                                             <option value="Health">Health</option>
                                             <option value="International">International</option>
                                             <option value="Sports">Sports</option>
+                                            <option value="Politics">Politics</option>
+                                            <option value="Entertainment">Entertainment</option>
                                             <option value="Technology">Technology</option>
+                                            <option value="The-Begusarai">The-Begusarai</option>
                                         </select>
                                         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
