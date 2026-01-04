@@ -84,12 +84,16 @@ const AddWriter = () => {
                             className='px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all bg-white'
                         >
                             <option value="">-- Select Category --</option>
+                            <option value="All">All</option>
                             <option value="Education">Education</option>
                             <option value="Travel">Travel</option>
                             <option value="Health">Health</option>
                             <option value="International">International</option>
                             <option value="Sports">Sports</option>
+                            <option value="Politics">Politics</option>
+                            <option value="Entertainment">Entertainment</option>
                             <option value="Technology">Technology</option>
+                            <option value="The-Begusarai">The-Begusarai</option>
                         </select>
                     </div>
 

@@ -931,35 +931,6 @@ class newsController {
         }
     }
 
-    // get_dashboard_data = async (req, res) => {
-    //     const { id, role } = req.userInfo
-    //     try {
-    //         let totalNews = 0, pendingNews = 0, activeNews = 0, deactiveNews = 0, writers = 0, recentNews = []
-
-    //         if (role === 'admin') {
-    //             totalNews = await newsModel.find({}).countDocuments()
-    //             pendingNews = await newsModel.find({ status: 'pending' }).countDocuments()
-    //             activeNews = await newsModel.find({ status: 'active' }).countDocuments()
-    //             deactiveNews = await newsModel.find({ status: 'deactive' }).countDocuments()
-    //             writers = await authModel.find({ role: 'writer' }).countDocuments()
-    //             recentNews = await newsModel.find({}).sort({ createdAt: -1 }).limit(5)
-    //         } else {
-    //             totalNews = await newsModel.find({ writerId: id }).countDocuments()
-    //             pendingNews = await newsModel.find({ writerId: id, status: 'pending' }).countDocuments()
-    //             activeNews = await newsModel.find({ writerId: id, status: 'active' }).countDocuments()
-    //             deactiveNews = await newsModel.find({ writerId: id, status: 'deactive' }).countDocuments()
-    //             recentNews = await newsModel.find({ writerId: id }).sort({ createdAt: -1 }).limit(5)
-    //         }
-
-    //         return res.status(200).json({
-    //             totalNews, pendingNews, activeNews, deactiveNews, writers, recentNews
-    //         })
-
-    //     } catch (error) {
-    //         console.log(error)
-    //         return res.status(500).json({ message: 'Internal server error' })
-    //     }
-    // }
 
 get_dashboard_data = async (req, res) => {
         const { id, role } = req.userInfo;
@@ -1034,54 +1005,138 @@ get_dashboard_data = async (req, res) => {
         }
     }
 
+    // get_all_news = async (req, res) => {
+    //     try {
+    //         const category_news = await newsModel.aggregate([
+    //             { $sort: { createdAt: -1 } },
+    //             { $match: { status: 'active' } },
+    //             {
+    //                 $group: {
+    //                     _id: "$category",
+    //                     news: { $push: { _id: '$_id', title: '$title', slug: '$slug', writerName: '$writerName', image: '$image', description: '$description', date: '$date', category: '$category' } }
+    //                 }
+    //             },
+    //             {
+    //                 $project: {
+    //                     _id: 0,
+    //                     category: '$_id',
+    //                     news: { $slice: ['$news', 5] }
+    //                 }
+    //             }
+    //         ])
+
+    //         const news = {}
+    //         for (let i = 0; i < category_news.length; i++) {
+    //             news[category_news[i].category] = category_news[i].news
+    //         }
+    //         return res.status(200).json({ news })
+    //     } catch (error) {
+    //         console.log(error.message)
+    //         return res.status(500).json({ message: 'Internal server error' })
+    //     }
+    // }
+
+    // get_news = async (req, res) => {
+    //     const { slug } = req.params
+    //     try {
+    //         const news = await newsModel.findOneAndUpdate({ slug }, { $inc: { count: 1 } }, { new: true })
+    //         const relateNews = await newsModel.find({
+    //             $and: [
+    //                 { slug: { $ne: slug } },
+    //                 { category: { $eq: news.category } }
+    //             ]
+    //         }).limit(4).sort({ createdAt: -1 })
+
+    //         return res.status(200).json({ news: news ? news : {}, relateNews })
+    //     } catch (error) {
+    //         console.log(error.message)
+    //         return res.status(500).json({ message: 'Internal server error' })
+    //     }
+    // }
+
+
+
     get_all_news = async (req, res) => {
-        try {
-            const category_news = await newsModel.aggregate([
-                { $sort: { createdAt: -1 } },
-                { $match: { status: 'active' } },
-                {
-                    $group: {
-                        _id: "$category",
-                        news: { $push: { _id: '$_id', title: '$title', slug: '$slug', writerName: '$writerName', image: '$image', description: '$description', date: '$date', category: '$category' } }
-                    }
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        category: '$_id',
-                        news: { $slice: ['$news', 5] }
+    try {
+        const category_news = await newsModel.aggregate([
+            { $match: { status: 'active' } }, // 1. Sirf active news lo
+            { $sort: { createdAt: -1 } },    // 2. Latest news upar rakho
+            {
+                $group: {
+                    _id: "$category",
+                    // 🔥 Nayi news ko hamesha list ke shuruat mein "push" karo
+                    news: { 
+                        $push: { 
+                            _id: '$_id', 
+                            title: '$title', 
+                            slug: '$slug', 
+                            writerName: '$writerName', 
+                            image: '$image', 
+                            description: '$description', 
+                            date: '$date', 
+                            category: '$category',
+                            createdAt: '$createdAt' // Sorting ke liye zaroori hai
+                        } 
                     }
                 }
-            ])
-
-            const news = {}
-            for (let i = 0; i < category_news.length; i++) {
-                news[category_news[i].category] = category_news[i].news
+            },
+            {
+                $project: {
+                    _id: 0,
+                    category: '$_id',
+                    // 🔥 Yahan slice karne se pehle ye ensure hota hai ki pehli 5 latest hain
+                    news: { $slice: ['$news', 5] } 
+                }
             }
-            return res.status(200).json({ news })
-        } catch (error) {
-            console.log(error.message)
-            return res.status(500).json({ message: 'Internal server error' })
+        ])
+
+        const news = {}
+        for (let i = 0; i < category_news.length; i++) {
+            news[category_news[i].category] = category_news[i].news
         }
+        return res.status(200).json({ news })
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({ message: 'Internal server error' })
     }
+}
+
 
     get_news = async (req, res) => {
-        const { slug } = req.params
-        try {
-            const news = await newsModel.findOneAndUpdate({ slug }, { $inc: { count: 1 } }, { new: true })
-            const relateNews = await newsModel.find({
-                $and: [
-                    { slug: { $ne: slug } },
-                    { category: { $eq: news.category } }
-                ]
-            }).limit(4).sort({ createdAt: -1 })
+    const { slug } = req.params
+    try {
+        // 1. News dhoondo aur uska 'count' (views) 1 se badhao
+        const news = await newsModel.findOneAndUpdate(
+            { slug }, 
+            { $inc: { count: 1 } }, 
+            { new: true }
+        )
 
-            return res.status(200).json({ news: news ? news : {}, relateNews })
-        } catch (error) {
-            console.log(error.message)
-            return res.status(500).json({ message: 'Internal server error' })
+        // Agar news nahi mili toh khali object bhej do
+        if (!news) {
+            return res.status(404).json({ message: 'News not found' })
         }
+
+        // 2. Usi category ki dusri news dhoondo (Related News)
+        // Lekin current news ko exclude (bahar) kar do
+        const relateNews = await newsModel.find({
+            $and: [
+                { slug: { $ne: slug } }, // Current news ko mat dikhao
+                { category: { $eq: news.category } } // Same category honi chahiye
+            ]
+        }).limit(4).sort({ createdAt: -1 }) // Latest 4 news lao
+
+        // 3. Final response bhej do
+        return res.status(200).json({ 
+            news: news, 
+            relateNews 
+        })
+
+    } catch (error) {
+        console.log("Backend Error:", error.message)
+        return res.status(500).json({ message: 'Internal server error' })
     }
+}
 
     get_categories = async (req, res) => {
         try {
