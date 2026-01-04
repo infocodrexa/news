@@ -2,9 +2,10 @@ const production = 'production'
 const local = 'dev'
 
 const local_api_url = 'http://localhost:5000'
-const production_api_url = 'http://localhost:5000'
+// 🔥 FIX: Yahan end mein "/api" add karna zaroori hai
+const production_api_url = 'https://api.thelocalmirror.in/api' 
 
-const mode = local
+const mode = production 
 
 let base_api_url = ''
 
@@ -15,11 +16,3 @@ if (mode === production) {
 }
 
 export { base_api_url }
-
-
-// Agar .env file me URL hai to wahan se lega, nahi to default (localhost) use karega.
-
-// const base_api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-// const base_site_url = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-
-// export { base_api_url, base_site_url }

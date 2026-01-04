@@ -1,27 +1,24 @@
-const production = 'production'
-const development = 'development'
+//const production = 'production'
+//const development = 'development'
 
-const mode = development
-let base_url = ''
+//const mode = development
+//let base_url = ''
 
-if (mode === production) {
-    base_url = ""
-} else {
-    base_url = 'http://localhost:5000'
-}
+//if (mode === production) {
+  //  base_url = ""
+//} else {
+  //  base_url = 'http://localhost:5000'
+//}
 
-export { base_url }
+//export { base_url }
 
 
-// const mode = "production";
-// let base_url = "";
+// src/config/config.js
 
-// if (mode === "production") {
-//   // Live Server URL (HTTPS)
-//   base_url = "https://api.thelocalmirror.in";
-// } else {
-//   // Local Testing URL
-//   base_url = "http://localhost:5000";
-// }
 
-// export { base_url };
+// src/config/config.js
+
+// 🔥 Fix: Yahan 'api' subdomain lagana zaroori hai
+const base_url = "https://api.thelocalmirror.in";
+
+export { base_url };
