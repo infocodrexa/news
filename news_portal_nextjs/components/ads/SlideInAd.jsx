@@ -13,10 +13,13 @@ export default function SlideInAd({ position = "home" }) {
     setVisible(true);
     const fetchAds = async () => {
       try {
+        console.log(`Fetching SlideInAd for ${position}...`);
         const res = await fetch(
           `${base_api_url}/api/ads/active?position=${position}`
         );
         const data = await res.json();
+        console.log(`SlideInAd Data (${position}):`, data);
+
         if (Array.isArray(data) && data.length > 0) {
           setAds(data);
         } else if (data && data._id) {
@@ -61,29 +64,30 @@ export default function SlideInAd({ position = "home" }) {
     <div className="relative w-full max-w-[1200px] mx-auto my-4 animate-fadeIn px-4 md:px-0 z-10">
       <button
         onClick={closeAd}
-        className="absolute top-2 right-4 z-20 bg-black/70 text-white px-2 py-1 text-xs rounded hover:bg-black"
+        className="absolute top-2 right-4 z-20 bg-black/70 text-white px-2 py-1 text-xs rounded hover:bg-black transition-colors"
       >
         ✕
       </button>
-
+      
       <a
         href={ad.redirectLink}
         target="_blank"
         rel="noopener noreferrer"
         className="block relative overflow-hidden rounded-md shadow-lg group"
       >
-        <img
-          src={imageUrl}
-          alt={ad.title}
-          className="w-full h-[130px] md:h-[170px] object-cover transition-transform duration-500 group-hover:scale-105"
-          onError={(e) => {
-            e.target.style.display = "none";
-            if(e.target.parentElement) {
-                e.target.parentElement.style.display = "none";
-            }
-          }}
-        />
-
+<img
+  src={imageUrl}
+  alt={ad.title}
+    // 🔥 MAGIC LINE: 'h-auto' aur 'aspect-[4/1]'
+    // Iska matlab: Width jitni bhi ho, Height hamesha width ka 4th hissa hogi (1200x300 ratio).
+       className="w-full h-auto aspect-[4/1] object-cover rounded-md transition-transform duration-500 group-hover:scale-105"
+        onError={(e) => {
+       e.target.style.display = "none";
+        if(e.target.parentElement) {
+        e.target.parentElement.style.display = "none";
+    	}
+  	}}
+	/>
         <div className="absolute inset-0 bg-black/40 flex flex-col justify-center px-6">
           <span className="text-xs uppercase tracking-widest text-gray-200">
             Sponsored

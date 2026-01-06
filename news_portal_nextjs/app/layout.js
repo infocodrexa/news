@@ -1,27 +1,24 @@
-// Root layout for the entire website (global font, CSS, header & SEO metadata)
+// Root layout for the entire website
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// 👇 AB HUM ENVIRONMENT VARIABLE SE URL UTHAYENGE
+// 👇 BADLAV 1: .in ko primary domain banaya taaki SEO power ek jagah rahe
 const currentSiteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://thelocalmirror.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://thelocalmirror.in";
 
 export const metadata = {
   title: {
-    // 🔴 Edited: Title me Begusarai aur Bihar add kiya
-    default:
-      "The Local Mirror - Begusarai & Bihar News | Latest Updates & Breaking Stories",
+    // 👇 BADLAV 2: Title ko optimize kiya Begusarai aur Bihar keywords ke saath
+    default: "The Local Mirror - Begusarai & Bihar News | Latest Updates & Breaking Stories",
     template: "%s | The Local Mirror - Begusarai News",
   },
 
-  // 🔴 Edited: Description me keywords dale
   description:
-    "The Local Mirror is your trusted source for Begusarai News and Bihar Breaking News. Get real-time updates on politics, crime, sports, and local events in Begusarai district and across Bihar in Hindi and English.",
+    "The Local Mirror is your trusted source for Begusarai News and Bihar Breaking News. Get real-time updates on politics, crime, sports, and local events.",
 
-  // 🔴 Edited: Begusarai aur Bihar ke tagde keywords
   keywords: [
     "The Local Mirror",
     "Begusarai News",
@@ -37,14 +34,13 @@ export const metadata = {
     "Latest News Bihar",
   ],
 
-  // ✅ 1. Metadata Base
   metadataBase: new URL(currentSiteUrl),
 
-  // ✅ 2. Alternates
+  // 👇 BADLAV 3: Canonical tag set kiya taaki Google .in ko hi "Asli" site maane
   alternates: {
     canonical: "/",
     languages: {
-      "en-IN": "https://thelocalmirror.in",
+      "hi-IN": "https://thelocalmirror.in",
       "en-GLOBAL": "https://thelocalmirror.com",
     },
   },
@@ -63,13 +59,11 @@ export const metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  },
+  },   
 
   openGraph: {
-    // 🔴 Edited: Social Media ke liye bhi title change kiya
     title: "The Local Mirror - Begusarai & Bihar Latest News",
-    description:
-      "Read the latest breaking news from Begusarai, Patna, and all over Bihar on The Local Mirror.",
+    description: "Read the latest breaking news from Begusarai, Patna, and all over Bihar on The Local Mirror.",
     url: currentSiteUrl,
     siteName: "The Local Mirror",
     images: [
@@ -99,12 +93,13 @@ export const metadata = {
   },
 
   verification: {
-    google: "google-site-verification-code-here",
+    // 👇 BADLAV 4: Aapka Google Search Console verification code yahan lga diya hai
+    google: "XamL5bwoHrj3b_jm_DnHlyDeMmMxTaDdOZXWz_2VbeU",
   },
-};
+};  
 
 export default function RootLayout({ children }) {
-  // 👇 Organization Schema (Isme Location Add kar di hai)
+  // 👇 BADLAV 5: Organization Schema ko .in URL ke saath update kiya
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsMediaOrganization",
@@ -116,7 +111,6 @@ export default function RootLayout({ children }) {
       width: 600,
       height: 60,
     },
-    // 🔴 Edited: Google ko bataya ki aap kahan service dete ho
     areaServed: {
       "@type": "Place",
       name: ["Begusarai", "Bihar", "India"],
@@ -133,6 +127,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* Is script se Google ko site ka structure samajh aata hai */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

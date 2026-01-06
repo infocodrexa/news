@@ -1,12 +1,12 @@
 const production = 'production'
 const local = 'dev'
-
 const local_api_url = 'http://localhost:5000'
-// 🔥 FIX: Yahan end mein "/api" add karna zaroori hai
-const production_api_url = 'https://api.thelocalmirror.in/api' 
 
-const mode = production 
+// 🔥 CHANGE 1: 'https' karo
+// 🔥 CHANGE 2: Last se '/api' hata do (Agar laga hai to)
+const production_api_url = 'https://api.thelocalmirror.in' 
 
+const mode = production
 let base_api_url = ''
 
 if (mode === production) {

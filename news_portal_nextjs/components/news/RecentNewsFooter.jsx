@@ -1,16 +1,21 @@
 import React from 'react'
 import Link from "next/link";
-import Image from "next/image";
 import { base_api_url } from '../../config/config'
 
 const RecentNewsFooter = async () => {
 
-    const res = await fetch(`${base_api_url}/api/recent/news`, {
-        next: {
-            revalidate: 1
-        }
-    })
-    const { news } = await res.json()
+    // Simple Data Fetching (No complex error handling that crashes site)
+    let news = [];
+    try {
+        const res = await fetch(`${base_api_url}/api/recent/news`, {
+            next: { revalidate: 1 }
+        })
+        const data = await res.json()
+        news = data.news || []
+    } catch (error) {
+        console.log("News fetch error, skipping...");
+        news = [];
+    }
 
     return (
         <div className="w-full flex flex-col gap-y-[14px]">
@@ -21,37 +26,30 @@ const RecentNewsFooter = async () => {
                 {
                     news && news.length > 0 && news.map((r, i) => {
                         if (i < 4) {
-                            return <Link key={i} href={`/news/${r.slug}`} className="flex w-full">
-                                <div className="group relative overflow-hidden w-[90px] h-[75px]">
-                                    <div className="w-[90px] h-[75px] block group-hover:scale-[1.1] transition-all duration-[1s]">
-                                        <Image
-                                            className=""
-                                            layout="fill"
-                                            src={
-                                                r.image
-                                            }
-                                            alt="images"
-                                        />
-                                        <div
-                                            className="w-full h-full block absolute left-0 top-0 invisible group-hover:visible bg-white cursor-pointer opacity-5 transition-all duration-300"
-                                            href={"#"}
-                                        ></div>
-                                    </div>
+                            return <Link key={i} href={`/news/${r.slug}`} className="flex w-full gap-x-2 group">
+                                <div className="group relative overflow-hidden w-[90px] h-[75px] block shrink-0 bg-gray-800 rounded-md">
+                                    {/* Simple IMG tag wapas laga diya hai */}
+                                    <img
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-all duration-300"
+                                        src={r.image} 
+                                        alt={r.title}
+                                    />
+                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all"></div>
                                 </div>
                                 <div className="w-[calc(100%-90px)] pl-2">
                                     <div className="flex flex-col gap-y-1">
-                                        <h2 className="text-sm font-semibold text-white hover:text-[#c80000]">
+                                        <h2 className="text-sm font-semibold text-slate-300 group-hover:text-[#c80000] transition-colors line-clamp-2 leading-tight">
                                             {r.title}
                                         </h2>
-                                        <div className="flex gap-x-2 text-xs font-normal text-white">
+                                        <div className="flex gap-x-2 text-xs text-slate-500">
                                             <span>{r?.date}</span>
-                                            <span>{r.writerName}</span>
                                         </div>
                                     </div>
                                 </div>
                             </Link>
                         }
-                    })}
+                    })
+                }
             </div>
         </div>
     )
