@@ -63,13 +63,31 @@ const ShareBar = ({ title, slug }) => {
         </a>
 
         {/* ================= Instagram ================= */}
-        <button
+        {/* <button
           onClick={() => {
             navigator.clipboard.writeText(`${title}\n\n${url}`);
             window.open("https://www.instagram.com/", "_blank");
             alert("Link copied! Paste it on Instagram story, bio or DM.");
           }}
           className="p-2 rounded-full bg-pink-600 text-white hover:opacity-90"
+          title="Share on Instagram"
+        >
+          <FaInstagram />
+        </button> */}
+        {/* ================= Instagram (Updated) ================= */}
+        <button
+          onClick={() => {
+            // लिंक और टाइटल कॉपी करें
+            const shareText = `${title}\n\n${url}`;
+            navigator.clipboard.writeText(shareText);
+
+            // अलर्ट दिखाएं और इंस्टाग्राम खोलें
+            alert(
+              "News link copied! Now you can paste it in your Story Link sticker or DM."
+            );
+            window.open("https://www.instagram.com/", "_blank");
+          }}
+          className="p-2 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white hover:opacity-90"
           title="Share on Instagram"
         >
           <FaInstagram />

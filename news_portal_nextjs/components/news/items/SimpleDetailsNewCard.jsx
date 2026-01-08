@@ -1,3 +1,4 @@
+
 import React from "react";
 import Link from "next/link";
 import { base_api_url } from "@/config/config";
@@ -14,24 +15,26 @@ const SimpleDetailsNewCard = ({ news, type, height }) => {
   return (
     <div className="bg-white shadow">
       <div className="group relative overflow-hidden">
-        {/* Style Fix: Height logic same rakha hai */}
-        <div
-          style={{ height: `${height}px` }}
-          className={`w-full group-hover:scale-[1.1] transition-all duration-[1s] relative`}
-        >
-          {/* ✅ Style Fix: absolute + w-full + h-full */}
-          <img 
-            src={getImageUrl(news?.image)} 
-            alt={news?.title || "News"}
-            className="absolute top-0 left-0 w-full h-full object-cover" 
-          />
-        </div>
-        
-        <div className="w-full h-full block absolute left-0 top-0 invisible group-hover:visible bg-white cursor-pointer opacity-5 transition-all duration-300"></div>
+
+        <Link href={`/news/${news?.slug}`}>
+          <div
+            style={{ height: `${height}px` }}
+            className="w-full group-hover:scale-[1.1] transition-all duration-[1s] relative cursor-pointer"
+          >
+            <img
+              src={getImageUrl(news?.image)}
+              alt={news?.title || "News"}
+              className="absolute top-0 left-0 w-full h-full object-cover"
+            />
+          </div>
+        </Link>
+
+        {/* 🔥 FIX HERE */}
+        <div className="w-full h-full block absolute left-0 top-0 invisible group-hover:visible bg-white cursor-pointer opacity-5 transition-all duration-300 pointer-events-none"></div>
 
         <div className="left-5 absolute bottom-4 flex justify-start items-start gap-x-2 text-white font-semibold gap-y-2">
           <div className="px-[6px] py-[2px] rounded-sm text-[13px] bg-[#c80000] uppercase shadow-md">
-            {news?.category ? news.category : "News"}
+            {news?.category || "News"}
           </div>
 
           {news?.subcategory && (
@@ -41,14 +44,15 @@ const SimpleDetailsNewCard = ({ news, type, height }) => {
           )}
         </div>
       </div>
-      
+
       <div className="p-5">
         <Link
-          className="text-[15px] font-semibold text-[#333333] hover:text-[#c80000]"
           href={`/news/${news?.slug}`}
+          className="text-[15px] font-semibold text-[#333333] hover:text-[#c80000]"
         >
           {news?.title}
         </Link>
+
         <div className="flex gap-x-2 text-xs font-normal text-slate-600">
           <span>{news?.date}</span>
           <span>{news?.writerName}</span>
