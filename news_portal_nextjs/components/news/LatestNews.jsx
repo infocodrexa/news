@@ -32,19 +32,29 @@ const LatestNews = () => {
     }, [])
 
     const ButtonGroup = ({ next, previous }) => {
-        return <div className='flex justify-between items-center mb-2'>
-            <div className='text-xl font-bold text-[#333333] relative before:absolute before:w-[4px] before:bg-[#c80000] before:h-full before:left-0 pl-3'>
-                Latest news
+        return (
+            <div className='flex justify-between items-center mb-2'>
+                <div className='text-xl font-bold text-[#333333] relative before:absolute before:w-[4px] before:bg-[#c80000] before:h-full before:left-0 pl-3'>
+                    Latest news
+                </div>
+                <div className='flex justify-center items-center gap-x-3'>
+                    <button
+                        onClick={() => previous()}
+                        aria-label="Previous latest news"
+                        className='w-[30px] h-[30px] flex justify-center items-center bg-white border border-slate-200 rounded-sm hover:bg-slate-50'
+                    >
+                        <span><FiChevronLeft /></span>
+                    </button>
+                    <button
+                        onClick={() => next()}
+                        aria-label="Next latest news"
+                        className='w-[30px] h-[30px] flex justify-center items-center bg-white border border-slate-200 rounded-sm hover:bg-slate-50'
+                    >
+                        <span><FiChevronRight /></span>
+                    </button>
+                </div>
             </div>
-            <div className='flex justify-center items-center gap-x-3'>
-                <button onClick={() => previous()} className='w-[30px] h-[30px] flex justify-center items-center bg-white border border-slate-200 rounded-sm hover:bg-slate-50' >
-                    <span><FiChevronLeft /></span>
-                </button>
-                <button onClick={() => next()} className='w-[30px] h-[30px] flex justify-center items-center bg-white border border-slate-200 rounded-sm hover:bg-slate-50' >
-                    <span><FiChevronRight /></span>
-                </button>
-            </div>
-        </div>
+        )
     }
 
     return (
@@ -59,19 +69,18 @@ const LatestNews = () => {
                     infinite={true}
                     transitionDuration={500}
                 >
-                    {
-                        news?.map((item, i) => {
-                             // ✅ FIX: Image URL yahan banakar bhej rahe hain
-                             const fixedItem = {
-                                ...item,
-                                image: item.image 
-                                    ? (item.image.startsWith('http') ? item.image : `${base_api_url}/uploads/${item.image}`) 
-                                    : "https://via.placeholder.com/400x200"
-                             };
-                             
-                             return <SimpleNewsCard item={fixedItem} key={i} type='latest' />
-                        })
-                    }
+                    {news.map((item, i) => {
+                        const fixedItem = {
+                            ...item,
+                            image: item.image
+                                ? (item.image.startsWith('http')
+                                    ? item.image
+                                    : `${base_api_url}/uploads/${item.image}`)
+                                : "https://via.placeholder.com/400x200"
+                        };
+
+                        return <SimpleNewsCard item={fixedItem} key={i} type='latest' />
+                    })}
                 </Carousel>
             ) : (
                 <div className="w-full h-[200px] flex items-center justify-center text-slate-400 border border-dashed rounded-md">

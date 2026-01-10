@@ -1,9 +1,9 @@
+
 import React from 'react'
 import { base_api_url } from '../../config/config'
 
 const Gallery = async () => {
 
-    // Data Fetching
     const res = await fetch(`${base_api_url}/api/images/news`, {
         next: { revalidate: 1 }
     })
@@ -16,7 +16,6 @@ const Gallery = async () => {
             </div>
             <div className="grid grid-cols-3 gap-2">
                 {images && images.length > 0 && images.map((item, i) => {
-                    // 🔥 IMAGE URL FIX
                     const imgUrl = item.image.startsWith("http") 
                         ? item.image 
                         : `${base_api_url}/uploads/${item.image}`;
@@ -26,7 +25,7 @@ const Gallery = async () => {
                             <img
                                 className="w-full h-full object-cover hover:scale-110 transition-all duration-300"
                                 src={imgUrl}
-                                alt="gallery image"
+                                alt={item.title || `News gallery image ${i + 1}`}
                             />
                         </div>
                     )

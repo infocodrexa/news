@@ -1,9 +1,11 @@
 
+
 "use client";
 
 import React from "react";
 import Link from "next/link";
 import { base_api_url } from "@/config/config";
+import moment from "moment"; 
 
 const NewsCard = ({ item }) => {
 
@@ -13,41 +15,56 @@ const NewsCard = ({ item }) => {
     return `${base_api_url}/uploads/${img}`;
   };
 
+  // 🔥 Final Fixed Date Logic
+  const displayDate = () => {
+    const timeFormat = "D MMM YYYY, h:mm A"; 
+
+    if (item?.updatedAt && item?.createdAt) {
+      // 60 seconds check
+      const diffInSeconds = moment(item.updatedAt).diff(moment(item.createdAt), 'seconds');
+      
+      if (diffInSeconds > 60) {
+        return <span>Updated: {moment(item.updatedAt).format(timeFormat)}</span>;
+      }
+    }
+    
+    if (item?.createdAt) {
+      return <span>{moment(item.createdAt).format(timeFormat)}</span>;
+    }
+
+    if (item?.date) {
+        const isValidDate = moment(item.date).isValid();
+        return <span>{isValidDate ? moment(item.date).format(timeFormat) : item.date}</span>;
+    }
+
+    return <span>Recent</span>; 
+  };
+
   return (
     <div className="bg-white shadow flex p-4">
-      <div className="relative group overflow-hidden h-full">
-
+      <div className="relative group overflow-hidden h-full shrink-0">
         <Link href={`/news/${item?.slug}`}>
           <div className="group-hover:scale-[1.1] transition-all duration-[1s] w-[100px] md:w-[160px] h-[93px] lg:w-[100px] relative cursor-pointer">
-            <img
-              src={getImageUrl(item?.image)}
-              alt="images"
-              className="absolute top-0 left-0 w-full h-full object-cover"
-            />
-
-            {/* 🔥 FIX HERE */}
-            <div className="w-full h-full block absolute left-0 top-0 invisible group-hover:visible bg-white cursor-pointer opacity-5 transition-all duration-300 pointer-events-none"></div>
+            <img src={getImageUrl(item?.image)} alt={item?.title} className="absolute top-0 left-0 w-full h-full object-cover" />
+             <div className="w-full h-full block absolute left-0 top-0 invisible group-hover:visible bg-white cursor-pointer opacity-5 transition-all duration-300 pointer-events-none"></div>
           </div>
         </Link>
-
       </div>
 
       <div className="flex flex-col gap-y-1 w-[calc(100%-100px)] md:w-[calc(100%-160px)] lg:w-[calc(100%-100px)] pl-3">
-        <Link
-          href={`/news/category/${item?.category}`}
-          className="text-sm font-semibold text-[#c80000]">
+        <Link href={`/news/category/${item?.category}`} className="text-sm font-semibold text-[#c80000]">
           {item?.category}
         </Link>
 
-        <Link
-          href={`/news/${item?.slug}`}
-          className="text-sm font-semibold text-[#333333] hover:text-[#c80000]">
+        <Link 
+            href={`/news/${item?.slug}`} 
+            className="text-sm font-semibold text-[#333333] hover:text-[#c80000] line-clamp-2 leading-tight"
+        >
           {item?.title}
         </Link>
 
-        <div className="flex gap-x-2 text-xs font-normal text-slate-600">
-          <span>{item?.date}</span>
-          <span>{item?.writerName}</span>
+        <div className="flex gap-x-2 text-xs font-normal text-slate-600 mt-1">
+          {displayDate()}
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 'use client'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -41,23 +40,24 @@ const Header_Category = () => {
 
     return (
         <div className='w-full font-sans sticky top-0 z-[100]'>
-            {/* 🔴 Headline Bar - Yeh hamesha RED rahega */}
             <div className='bg-[#c80000] w-full text-white uppercase font-semibold relative shadow-md'>
                 <div className='px-4 md:px-8 flex justify-between items-center h-[52px]'>
                     
-                    {/* 📱 Mobile Menu Icon */}
+                    {/* Mobile Menu Icon */}
                     <div 
                         onClick={() => {
                             setMobileMenuShow(!mobileMenuShow)
                             setShowSearch(false)
                         }} 
+                        aria-label={mobileMenuShow ? 'Close menu' : 'Open menu'}
+                        role="button"
                         className='lg:hidden flex items-center gap-1 cursor-pointer p-2 rounded-md active:bg-black/20'
                     >
                         {mobileMenuShow ? <IoClose size={24} /> : <BsList size={24} />}
                         <span className='text-[10px]'>Menu</span>
                     </div>
 
-                    {/* 💻 Desktop Menu */}
+                    {/* Desktop Menu */}
                     <div className='hidden lg:flex items-center flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide'>
                         <Link 
                             className={`px-5 py-[15px] border-b-4 border-transparent hover:bg-black/10 transition-all ${path === '/' ? 'border-white bg-black/10' : ''}`} 
@@ -76,24 +76,33 @@ const Header_Category = () => {
                         ))}
                     </div>
 
-                    {/* 🔍 Search Icon */}
+                    {/* Search Toggle */}
                     <div className='flex items-center'>
                         <div 
                             onClick={() => {
                                 setShowSearch(!showSearch)
                                 setMobileMenuShow(false)
                             }} 
-                            className={`text-xl p-4 cursor-pointer hover:bg-black/10 rounded-md transition-all`}
+                            aria-label={showSearch ? 'Close search' : 'Open search'}
+                            role="button"
+                            className='text-xl p-4 cursor-pointer hover:bg-black/10 rounded-md transition-all'
                         >
                             {showSearch ? <IoClose /> : <AiOutlineSearch />}
                         </div>
                     </div>
                 </div>
 
-                {/* 🔎 Search Bar Dropdown (White Background for clarity) */}
+                {/* Search Bar */}
                 <div className={`absolute left-0 right-0 top-[52px] w-full bg-white shadow-2xl z-[60] p-4 transition-all duration-300 ${showSearch ? 'translate-y-0 opacity-100 visible' : '-translate-y-4 opacity-0 invisible'}`}>
                     <form onSubmit={handleSearch} className='max-w-[800px] mx-auto flex border-2 border-[#c80000] rounded-lg overflow-hidden shadow-sm'>
+                        
+                        {/* Hidden label for accessibility */}
+                        <label htmlFor="news-search" className="sr-only">
+                            Search news
+                        </label>
+
                         <input 
+                            id="news-search"
                             value={state} 
                             required 
                             onChange={(e) => setState(e.target.value)} 
@@ -101,13 +110,17 @@ const Header_Category = () => {
                             placeholder='Search news...' 
                             className='flex-1 p-3 text-slate-800 outline-none bg-transparent' 
                         />
-                        <button className='px-6 bg-[#c80000] text-white hover:bg-red-700 transition-all'>
+                        <button
+                            type="submit"
+                            aria-label="Submit search"
+                            className='px-6 bg-[#c80000] text-white hover:bg-red-700 transition-all'
+                        >
                             <AiOutlineSearch size={24} />
                         </button>
                     </form>
                 </div>
 
-                {/* ⚪ Mobile Categories - Niche khulne par WHITE Background */}
+                {/* Mobile Categories */}
                 <div className={`absolute left-0 right-0 top-[52px] w-full bg-white z-[55] shadow-2xl lg:hidden transition-all duration-300 overflow-hidden ${mobileMenuShow ? 'max-h-[60vh] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}>
                     <div className='flex flex-col border-t border-slate-100 overflow-y-auto max-h-[55vh]'>
                         <Link 
@@ -134,4 +147,4 @@ const Header_Category = () => {
     )
 }
 
-export default Header_Category;
+export default Header_Category

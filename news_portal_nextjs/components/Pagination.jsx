@@ -1,9 +1,9 @@
+
 import React from "react";
 import Link from "next/link";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 const Pagination = ({ pageNumber, totalPages, category }) => {
-  // Page numbers logic (1 2 3 ... 10)
   const getPageNumbers = () => {
     const delta = 2;
     const range = [];
@@ -11,7 +11,11 @@ const Pagination = ({ pageNumber, totalPages, category }) => {
     let l;
 
     for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= pageNumber - delta && i <= pageNumber + delta)) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= pageNumber - delta && i <= pageNumber + delta)
+      ) {
         range.push(i);
       }
     }
@@ -33,29 +37,46 @@ const Pagination = ({ pageNumber, totalPages, category }) => {
   const pages = getPageNumbers();
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-8 mb-4">
+    <div
+      className="flex justify-center items-center gap-2 mt-8 mb-4"
+      role="navigation"
+      aria-label="Pagination"
+    >
       {/* Previous Button */}
       {pageNumber > 1 ? (
         <Link
           href={`/news/category/${category}?page=${pageNumber - 1}`}
+          aria-label="Go to previous page"
           className="w-[36px] h-[36px] flex justify-center items-center border border-gray-300 rounded-sm text-gray-600 hover:bg-[#c80000] hover:text-white transition-all bg-white"
         >
           <BsChevronLeft />
         </Link>
       ) : (
-        <button disabled className="w-[36px] h-[36px] flex justify-center items-center border border-gray-200 rounded-sm text-gray-300 bg-white cursor-not-allowed">
+        <button
+          disabled
+          aria-label="Previous page (disabled)"
+          className="w-[36px] h-[36px] flex justify-center items-center border border-gray-200 rounded-sm text-gray-300 bg-white cursor-not-allowed"
+        >
           <BsChevronLeft />
         </button>
       )}
 
-      {/* Numbers */}
+      {/* Page Numbers */}
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={i} className="px-2 text-gray-500 font-bold self-end pb-1">...</span>
+          <span
+            key={i}
+            className="px-2 text-gray-500 font-bold self-end pb-1"
+            aria-hidden="true"
+          >
+            ...
+          </span>
         ) : (
           <Link
             key={i}
             href={`/news/category/${category}?page=${p}`}
+            aria-label={`Go to page ${p}`}
+            aria-current={pageNumber === p ? "page" : undefined}
             className={`w-[36px] h-[36px] flex justify-center items-center border rounded-sm font-semibold transition-all ${
               pageNumber === p
                 ? "bg-[#c80000] text-white border-[#c80000]"
@@ -71,12 +92,17 @@ const Pagination = ({ pageNumber, totalPages, category }) => {
       {pageNumber < totalPages ? (
         <Link
           href={`/news/category/${category}?page=${pageNumber + 1}`}
+          aria-label="Go to next page"
           className="w-[36px] h-[36px] flex justify-center items-center border border-gray-300 rounded-sm text-gray-600 hover:bg-[#c80000] hover:text-white transition-all bg-white"
         >
           <BsChevronRight />
         </Link>
       ) : (
-        <button disabled className="w-[36px] h-[36px] flex justify-center items-center border border-gray-200 rounded-sm text-gray-300 bg-white cursor-not-allowed">
+        <button
+          disabled
+          aria-label="Next page (disabled)"
+          className="w-[36px] h-[36px] flex justify-center items-center border border-gray-200 rounded-sm text-gray-300 bg-white cursor-not-allowed"
+        >
           <BsChevronRight />
         </button>
       )}

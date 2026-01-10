@@ -64,6 +64,7 @@ export default function SlideInAd({ position = "home" }) {
     <div className="relative w-full max-w-[1200px] mx-auto my-4 animate-fadeIn px-4 md:px-0 z-10">
       <button
         onClick={closeAd}
+        aria-label="Close advertisement banner"
         className="absolute top-2 right-4 z-20 bg-black/70 text-white px-2 py-1 text-xs rounded hover:bg-black transition-colors"
       >
         ✕
@@ -73,6 +74,7 @@ export default function SlideInAd({ position = "home" }) {
         href={ad.redirectLink}
         target="_blank"
         rel="noopener noreferrer"
+         aria-label="Open sponsored advertisement in new tab"
         className="block relative overflow-hidden rounded-md shadow-lg group"
       >
 <img

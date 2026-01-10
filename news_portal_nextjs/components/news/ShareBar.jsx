@@ -4,17 +4,18 @@ import {
   FaWhatsapp,
   FaFacebookF,
   FaXTwitter,
-  FaInstagram,
   FaLink,
 } from "react-icons/fa6";
-import { base_api_url } from "@/config/config"; // ✅ config import
 
-const BRAND_TEXT =
-  "Welcome to The Local Mirror — reflecting the truth, every day.";
+const FRONTEND_URL = "https://thelocalmirror.in";
+const BRAND_TEXT = "Read this on The Local Mirror:";
 
 const ShareBar = ({ title, slug }) => {
-  // ✅ env ki jagah config-based URL
-  const url = `${base_api_url.replace("/api", "")}/news/${slug}`;
+  // ✅ Ye Link har device par sahi chalega
+  const url = `${FRONTEND_URL}/news/${slug}`;
+
+  // Twitter Share URL
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
 
   return (
     <div className="mt-8 pt-4 border-t">
@@ -23,11 +24,9 @@ const ShareBar = ({ title, slug }) => {
       </p>
 
       <div className="flex gap-3 items-center flex-wrap">
-        {/* ================= WhatsApp ================= */}
+        {/* 1. WhatsApp */}
         <a
-          href={`https://wa.me/?text=${encodeURIComponent(
-            `${title}\n\n${url}`
-          )}`}
+          href={`https://wa.me/?text=${encodeURIComponent(`${title}\n\n${url}`)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-green-500 text-white hover:opacity-90"
@@ -36,11 +35,9 @@ const ShareBar = ({ title, slug }) => {
           <FaWhatsapp />
         </a>
 
-        {/* ================= Facebook ================= */}
+        {/* 2. Facebook */}
         <a
-          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-            url
-          )}`}
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-blue-600 text-white hover:opacity-90"
@@ -49,58 +46,25 @@ const ShareBar = ({ title, slug }) => {
           <FaFacebookF />
         </a>
 
-        {/* ================= Twitter / X ================= */}
+        {/* 3. Twitter / X */}
         <a
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            title
-          )}&url=${encodeURIComponent(url)}`}
+          href={twitterUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-black text-white hover:opacity-90"
-          title="Share on X (Twitter)"
+          title="Share on X"
         >
           <FaXTwitter />
         </a>
 
-        {/* ================= Instagram ================= */}
-        {/* <button
-          onClick={() => {
-            navigator.clipboard.writeText(`${title}\n\n${url}`);
-            window.open("https://www.instagram.com/", "_blank");
-            alert("Link copied! Paste it on Instagram story, bio or DM.");
-          }}
-          className="p-2 rounded-full bg-pink-600 text-white hover:opacity-90"
-          title="Share on Instagram"
-        >
-          <FaInstagram />
-        </button> */}
-        {/* ================= Instagram (Updated) ================= */}
-        <button
-          onClick={() => {
-            // लिंक और टाइटल कॉपी करें
-            const shareText = `${title}\n\n${url}`;
-            navigator.clipboard.writeText(shareText);
-
-            // अलर्ट दिखाएं और इंस्टाग्राम खोलें
-            alert(
-              "News link copied! Now you can paste it in your Story Link sticker or DM."
-            );
-            window.open("https://www.instagram.com/", "_blank");
-          }}
-          className="p-2 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 text-white hover:opacity-90"
-          title="Share on Instagram"
-        >
-          <FaInstagram />
-        </button>
-
-        {/* ================= Copy Link ================= */}
+        {/* 4. Copy Link (Instagram hata diya) */}
         <button
           onClick={() => {
             navigator.clipboard.writeText(`${BRAND_TEXT} ${url}`);
             alert("Link copied successfully");
           }}
           className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
-          title="Copy link"
+          title="Copy Link"
         >
           <FaLink />
         </button>

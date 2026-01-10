@@ -1,12 +1,10 @@
+// app/sitemap.js
 import { base_api_url } from "@/config/config";
-import { headers } from "next/headers";
 
-// Simple Sitemap - No complex indexing for now
+// Simple Sitemap - Fixed for Primary Domain (.in)
 export default async function sitemap() {
-  const headersList = headers();
-  const host = headersList.get("host") || "thelocalmirror.in";
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
+  // 💡 BADLAV: baseUrl ko fix kiya taaki Google hamesha .in ko primary maane
+  const baseUrl = "https://thelocalmirror.in";
 
   let newsEntries = [];
   let categoryEntries = [];

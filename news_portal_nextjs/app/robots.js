@@ -1,27 +1,22 @@
-import { headers } from "next/headers";
+// app/robots.js
 
 export default function robots() {
-  // 1. Current host (domain) detect karna
-  const headersList = headers();
-  const host = headersList.get("host") || "thelocalmirror.in"; 
-  
-  // 2. Protocol check (Localhost pe http, live pe https)
-  const protocol = host.includes("localhost") ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
+  const baseUrl = "https://thelocalmirror.in";
 
   return {
     rules: [
       {
-        userAgent: "*", // Sabhi search engines ke liye
-        allow: "/",     // Puri site crawl karne ki permission
+        userAgent: "*", // Sabhi search engines (Google, Bing, etc.) ke liye
+        allow: "/",     // Puri website crawl karne ki permission
         disallow: [
-          "/admin",     // Admin panel ko hide kiya
-          "/api",       // Backend routes ko hide kiya
-          "/login",     // Login page ko hide kiya
+          "/admin",     // Admin panel ko search se chhupaya
+          "/api",       // Backend routes ko chhupaya
+          "/login",     // Login page ko index nahi karna
+          "/private",   // Private files ko hide kiya
         ],
       },
     ],
-    // 3. Dynamic Sitemap Link (Ye automatic domain change kar lega)
+    // Sitemap hamesha primary domain (.in) ka hi rahega
     sitemap: `${baseUrl}/sitemap.xml`, 
   };
 }
