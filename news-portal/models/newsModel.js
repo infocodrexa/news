@@ -1,3 +1,64 @@
+// const { model, Schema } = require('mongoose')
+
+// const newsSchema = new Schema({
+//     writerId: {
+//         type: Schema.Types.ObjectId,
+//         required: true,
+//         ref: 'authors'
+//     },
+//     writerName: {
+//         type: String,
+//         required: true
+//     },
+//     title: {
+//         type: String,
+//         required: true
+//     },
+//     slug: {
+//         type: String,
+//         required: true
+//     },
+//     image: {
+//         type: String,
+//         required: true
+//     },
+//     category: {
+//         type: String,
+//         required: true
+//     },
+//     description: {
+//         type: String,
+//         default: ""
+//     },
+//     date: {
+//         type: String,
+//         required: true
+//     },
+//     status: {
+//         type: String,
+//         default: 'pending'
+//     },
+//     count: {
+//         type: Number,
+//         default: 0
+//     }
+// }, { timestamps: true })
+
+// newsSchema.index({
+//     title: 'text',
+//     category: 'text',
+//     description: 'text'
+// }, {
+//     title: 5,
+//     description: 4,
+//     category: 2
+// })
+
+// module.exports = model('news', newsSchema)
+
+
+
+
 const { model, Schema } = require('mongoose')
 
 const newsSchema = new Schema({
@@ -26,6 +87,18 @@ const newsSchema = new Schema({
         type: String,
         required: true
     },
+    subCategory: {
+        type: String,
+        default: '' 
+    },
+    subCategorySlug: {
+        type: String,
+        default: ''
+    },
+    tags: {
+        type: [String],
+        default: []
+    },
     description: {
         type: String,
         default: ""
@@ -42,16 +115,20 @@ const newsSchema = new Schema({
         type: Number,
         default: 0
     }
-}, { timestamps: true })
+}, { timestamps: true,
+     strict: false
+ })
 
 newsSchema.index({
     title: 'text',
     category: 'text',
-    description: 'text'
+    description: 'text',
+    tags: 'text'
 }, {
     title: 5,
     description: 4,
-    category: 2
+    category: 2,
+    tags: 3
 })
 
 module.exports = model('news', newsSchema)

@@ -1,16 +1,31 @@
 import React from "react";
 import Link from "next/link";
-const Breadcrumb = ({one,two}) => {
+
+const Breadcrumb = ({ one, two }) => {
+
+  // 👇 Fixer Function
+  const cleanText = (text) => {
+      if (!text) return "";
+      try {
+          const decoded = decodeURIComponent(text);
+          return decoded.replace(/-/g, ' ');
+      } catch (error) {
+          return text.replace(/-/g, ' ');
+      }
+  };
+
   return (
-    <div class="flex" aria-label="Breadcrumb">
-      <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-        <li class="inline-flex items-center">
+    <div className="flex" aria-label="Breadcrumb">
+      <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+        
+        {/* 🏠 Home Link (Ye Link hi rahega) */}
+        <li className="inline-flex items-center">
           <Link
             href="/"
-            class="inline-flex items-center text-sm font-medium text-red-500 hover:text-red-600 "
+            className="inline-flex items-center text-sm font-medium text-red-500 hover:text-red-600"
           >
             <svg
-              class="w-3 h-3 me-2.5"
+              className="w-3 h-3 me-2.5"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -21,50 +36,43 @@ const Breadcrumb = ({one,two}) => {
             Home
           </Link>
         </li>
+
+        {/* 🗂️ Middle Item (Category) - ❌ LINK REMOVED, NOW SPAN */}
         <li>
-          <div class="flex items-center">
+          <div className="flex items-center">
             <svg
-              class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+              className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 6 10"
             >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 9 4-4-4-4"
-              />
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4" />
             </svg>
+            
+            {/* 👇 Yahan ab Link nahi hai, Sirf Span hai (Non-clickable) */}
             <span
-              href="#"
-              class="ms-1 text-sm font-medium text-red-500 hover:text-red-600"
+              className="ms-1 text-sm font-medium text-red-500 uppercase cursor-pointer" // Cursor pointer laga diya taaki click karne jaisa feel aaye
             >
-              {one}
+              {cleanText(one)}
             </span>
           </div>
         </li>
+
+        {/* 📄 Last Item (Title) */}
         <li aria-current="page">
-          <div class="flex items-center">
+          <div className="flex items-center">
             <svg
-              class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
+              className="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 6 10"
             >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 9 4-4-4-4"
-              />
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4" />
             </svg>
-            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2">
-              {two}
+            <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 truncate max-w-[200px]">
+              {cleanText(two)}
             </span>
           </div>
         </li>

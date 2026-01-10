@@ -3,7 +3,7 @@ const db_connect = async () => {
     try {
         if (process.env.mode === 'production') {
             await mongoose.connect(process.env.db_production_url)
-            console.log('poduction database connect')
+            console.log('production database connect')
         } else {
             console.log('ok')
             await mongoose.connect(process.env.db_local_url)
@@ -14,4 +14,4 @@ const db_connect = async () => {
     }
 }
 
-module.exports = db_connect
+module.exports = db_connect 

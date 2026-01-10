@@ -1,6 +1,5 @@
-
+//slider
 export const dynamic = "force-dynamic";
-
 import Breadcrumb from "@/components/Breadcrumb";
 import Category from "@/components/Category";
 import Footer from "@/components/Footer";
@@ -11,18 +10,20 @@ import { base_api_url } from "../../../config/config";
 import RelatedNews from "@/components/news/RelatedNews";
 import RecentNews from "@/components/news/RecentNews";
 import ShareBar from "@/components/news/ShareBar";
-import moment from "moment"; 
+import moment from "moment";
+import { formatCategory } from "@/utils/format";
+import Link from "next/link";
+// import GoogleAdPlaceholder from "@/components/ads/GoogleAdPlaceholder";
 
-/* =====================================================
-   ✅ METADATA
-   ===================================================== */
 export async function generateMetadata({ params }) {
   const { slug } = params;
   const res = await fetch(`${base_api_url}/api/news/details/${slug}`);
   const { news } = await res.json();
   const siteUrl = base_api_url.replace("/api", "");
   const imageUrl = news?.image
-    ? (news.image.startsWith("http") ? news.image : `${siteUrl}/uploads/${news.image}`)
+    ? news.image.startsWith("http")
+      ? news.image
+      : `${siteUrl}/uploads/${news.image}`
     : `${siteUrl}/assets/og-image.png`;
   const plainDescription = news?.description
     ? news.description.replace(/<[^>]*>/g, "").slice(0, 160)
@@ -66,23 +67,32 @@ const Details = async ({ params }) => {
   let dateDisplay = null;
 
   if (news?.updatedAt && news?.createdAt) {
-      // Calculate difference in seconds
-      const diffInSeconds = moment(news.updatedAt).diff(moment(news.createdAt), 'seconds');
-      
-      // Agar 60 seconds se zyada ka fark hai, tabhi Update maano
-      if (diffInSeconds > 60) {
-          dateDisplay = <span className="text-gray-800 font-semibold">Updated: {moment(news.updatedAt).format(timeFormat)}</span>;
-      }
-  } 
-  
+    // Calculate difference in seconds
+    const diffInSeconds = moment(news.updatedAt).diff(
+      moment(news.createdAt),
+      "seconds"
+    );
+
+    // Agar 60 seconds se zyada ka fark hai, tabhi Update maano
+    if (diffInSeconds > 60) {
+      dateDisplay = (
+        <span className="text-gray-800 font-semibold">
+          Updated: {moment(news.updatedAt).format(timeFormat)}
+        </span>
+      );
+    }
+  }
+
   // Agar upar wala check fail hua (matlab naya hai), toh Created date dikhao
   if (!dateDisplay && news?.createdAt) {
-      dateDisplay = moment(news.createdAt).format(timeFormat);
+    dateDisplay = moment(news.createdAt).format(timeFormat);
   }
-  
+
   // Fallback
   else if (!dateDisplay && news?.date) {
-      dateDisplay = moment(news.date).isValid() ? moment(news.date).format(timeFormat) : news.date;
+    dateDisplay = moment(news.date).isValid()
+      ? moment(news.date).format(timeFormat)
+      : news.date;
   }
 
   return (
@@ -94,14 +104,18 @@ const Details = async ({ params }) => {
         </div>
       </div>
 
+      {/* 🟢 AD SPACE 1: Title se pehle bada banner */}
+      {/* <div className="container mx-auto px-4 md:px-8">
+         <GoogleAdPlaceholder type="banner" />
+      </div> */}
+
       {/* ===== MAIN ===== */}
       <div className="bg-slate-200 w-full">
         <div className="px-4 md:px-8 w-full py-8">
           <div className="flex flex-wrap">
-            
             {/* ===== LEFT (NEWS CONTENT) ===== */}
             <div className="w-full xl:w-8/12 pr-0 xl:pr-4">
-              <div className="bg-white"> 
+              <div className="bg-white">
                 <img
                   src={getImageUrl(news?.image)}
                   alt={news?.title}
@@ -109,9 +123,18 @@ const Details = async ({ params }) => {
                 />
 
                 <div className="flex flex-col gap-y-4 px-6 pb-6 mt-6">
-                  <h3 className="text-red-700 uppercase font-medium text-xl">
-                    {news?.category}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-red-700 uppercase font-medium text-xl">
+                      {/* {news?.category} */}
+                      {formatCategory(news?.category)}
+                    </h3>
+                    {/* SubCategory agar available ho tabhi dikhega */}
+                    {news?.subCategory && (
+                      <span className="text-gray-500 font-bold text-lg uppercase">
+                        - {news?.subCategory}
+                      </span>
+                    )}
+                  </div>
 
                   <h2 className="text-3xl text-gray-700 font-bold">
                     {news?.title}
@@ -119,14 +142,51 @@ const Details = async ({ params }) => {
 
                   <div className="flex gap-x-2 text-xs font-normal text-slate-600">
                     <span>{dateDisplay} /</span>
-                    <span>{news?.writerName}</span>
+                    <span>
+                      <Link
+                        href={`/writer/${news.writerId?._id || news.writerId}`}
+                        className="font-bold text-red-600 hover:text-blue-700 hover:underline transition-colors"
+                      >
+                        {news.writerName}
+                      </Link>
+                    </span>
                   </div>
+
+                  {/* 🟢 AD SPACE 2: Content shuru hone se pehle */}
+                  {/* <GoogleAdPlaceholder type="inContent" /> */}
 
                   <div className="text-[#333333] leading-relaxed news-content">
                     {htmlParser(news?.description)}
                   </div>
 
+                  {news?.tags && news.tags.length > 0 && (
+                    <div className="mt-6 pt-4 border-t border-gray-100">
+                      <span className="text-sm font-bold text-gray-700 mb-2 block">
+                        Tags:
+                      </span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {news.tags
+                          .toString()
+                          .split(",")
+                          .map((tag, i) => (
+                            <Link
+                              key={i}
+                              href={`/tag/${tag.trim()}`}
+                              className="bg-gray-100 border border-gray-200 text-gray-600 hover:bg-[#c80000] hover:text-white hover:border-[#c80000] px-4 py-1.5 rounded-full text-sm transition-all duration-200 font-medium"
+                            >
+                              #{tag.trim()}
+                            </Link>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
                   <ShareBar title={news?.title} slug={news?.slug} />
+                </div>
+
+                {/* 🟢 AD SPACE 3: Article khatam hone ke baad */}
+                <div className="px-6">
+                  {/* <GoogleAdPlaceholder type="inContent" /> */}
                 </div>
 
                 <div className="pt-8 px-6 pb-8 border-t">
@@ -139,13 +199,16 @@ const Details = async ({ params }) => {
             <div className="w-full xl:w-4/12 pl-0 xl:pl-4 mt-8 xl:mt-0">
               <div className="flex flex-col gap-y-8 sticky top-4">
                 <Search />
+
+                {/* 🟢 AD SPACE 4: Sidebar Top */}
+                {/* <GoogleAdPlaceholder type="sidebar" /> */}
+
                 <RecentNews />
                 <div className="p-4 bg-white">
                   <Category titleStyle={"text-gray-700 font-bold"} />
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

@@ -1,8 +1,10 @@
-// seo implement
+// seo implement 
+
 "use client";
 import React, { useEffect, useState } from "react";
 import Title from "../Title";
 import SimpleDetailsNewCard from "./items/SimpleDetailsNewCard";
+import { formatCategory } from "@/utils/format";
 
 const DetailsNews = ({ category, news }) => {
   // Browser ka URL nikalne ke liye state
@@ -18,11 +20,13 @@ const DetailsNews = ({ category, news }) => {
     return null; 
   }
 
+  const cleanCategory = formatCategory(category);
+
   // --- SEO Logic (Dynamic URL) ---
   const seoSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": `${category} Section`,
+    "name": `${cleanCategory} Section`,
     "itemListElement": news.slice(0, 2).map((item, index) => ({
       "@type": "ListItem",
       "position": index + 1,
@@ -39,7 +43,7 @@ const DetailsNews = ({ category, news }) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(seoSchema) }}
       />
 
-      <Title title={category} />
+      <Title title={cleanCategory} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 lg:gap-x-3">
         {news[0] && (

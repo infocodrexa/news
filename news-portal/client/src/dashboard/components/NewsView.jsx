@@ -1,108 +1,6 @@
-// import React, { useEffect, useState, useContext } from 'react'
-// import { IoMdClose } from "react-icons/io";
-// import { base_url } from '../../config/config'
-// import axios from 'axios'
-// import storeContext from '../../context/storeContext'
-// import dateFormat from 'dateformat'
-
-// const NewsView = ({ show, setShow, newsId }) => {
-
-//     const { store } = useContext(storeContext)
-//     const [news, setNews] = useState(null)
-
-//     useEffect(() => {
-//         const get_news = async () => {
-//             try {
-//                 const { data } = await axios.get(`${base_url}/api/news/${newsId}`, {
-//                     headers: {
-//                         'Authorization': `Bearer ${store.token}`
-//                     }
-//                 })
-//                 setNews(data.news)
-//             } catch (error) {
-//                 console.log(error)
-//             }
-//         }
-//         if (newsId) {
-//             get_news()
-//         }
-//     }, [newsId, store.token])
-
-//     if (!show) return null
-
-//     // Stop click propagation to prevent closing when clicking inside modal
-//     const handleContentClick = (e) => {
-//         e.stopPropagation();
-//     }
-
-//     return (
-//         // Overlay - Click outside to close
-//         <div onClick={() => setShow(false)} className='fixed top-0 left-0 w-full h-screen z-[9999] bg-black/60 backdrop-blur-sm flex justify-center items-center p-4 transition-all duration-300'>
-            
-//             {/* Modal Box */}
-//             <div onClick={handleContentClick} className='bg-white w-full md:w-[750px] max-h-[90vh] rounded-xl shadow-2xl overflow-hidden flex flex-col animate-fadeIn'>
-                
-//                 {/* Header Section (Sticky Top) */}
-//                 <div className='flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-50'>
-//                     <h2 className='text-lg font-semibold text-gray-700'>News Preview</h2>
-//                     <button onClick={() => setShow(false)} className='text-2xl text-gray-500 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-gray-200'>
-//                         <IoMdClose />
-//                     </button>
-//                 </div>
-
-//                 {/* Content Section (Scrollable) */}
-//                 <div className='overflow-y-auto p-6 md:p-8 custom-scrollbar'>
-//                     {
-//                         news ? (
-//                             <div className='flex flex-col gap-y-5'>
-//                                 {/* Meta Data (Date & Category) */}
-//                                 <div className='flex items-center gap-x-3'>
-//                                     <span className='px-3 py-1 bg-purple-600 text-white rounded-full text-xs font-bold uppercase tracking-wide'>
-//                                         {news.category}
-//                                     </span>
-//                                     <span className='text-gray-500 text-sm font-medium'>
-//                                         {dateFormat(news.date, "mmmm dS, yyyy")}
-//                                     </span>
-//                                 </div>
-
-//                                 {/* Title */}
-//                                 <h1 className='text-2xl md:text-3xl font-bold text-gray-900 leading-tight'>
-//                                     {news.title}
-//                                 </h1>
-
-//                                 {/* Image */}
-//                                 <div className='w-full h-[350px] rounded-lg overflow-hidden shadow-md'>
-//                                     <img src={news.image} alt={news.title} className='w-full h-full object-cover hover:scale-105 transition-transform duration-500'/>
-//                                 </div>
-
-//                                 {/* Writer Info */}
-//                                 <div className='flex items-center gap-x-2 mt-2 border-l-4 border-purple-500 pl-3'>
-//                                     <span className='text-gray-600 text-sm'>By</span>
-//                                     <span className='font-semibold text-gray-800'>{news.writerName}</span>
-//                                 </div>
-
-//                                 {/* Description (HTML Content) */}
-//                                 <div className='mt-2 text-gray-700 leading-7 text-lg space-y-4' dangerouslySetInnerHTML={{__html: news.description}}></div>
-//                             </div>
-//                         ) : (
-//                             // Loader
-//                             <div className='flex flex-col items-center justify-center py-20'>
-//                                 <div className='w-10 h-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin'></div>
-//                                 <p className='mt-3 text-gray-500'>Loading News...</p>
-//                             </div>
-//                         )
-//                     }
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
-
-// export default NewsView
-
-
 import React, { useEffect, useState, useContext } from 'react';
 import { IoMdClose } from "react-icons/io";
+import { FaHashtag } from "react-icons/fa"; // Tag icon
 import { base_url } from '../../config/config';
 import axios from 'axios';
 import storeContext from '../../context/storeContext';
@@ -112,6 +10,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 const NewsView = ({ show, setShow, newsId }) => {
     const { store } = useContext(storeContext);
     const [news, setNews] = useState(null);
+
+    // Formatter logic
+    const formatCategory = (text) => {
+        if (!text) return "";
+        try {
+            return decodeURIComponent(text).replace(/-/g, ' ');
+        } catch (e) {
+            return text.replace(/-/g, ' ');
+        }
+    };
 
     useEffect(() => {
         const get_news = async () => {
@@ -129,7 +37,6 @@ const NewsView = ({ show, setShow, newsId }) => {
         }
     }, [newsId, store.token]);
 
-    // Handle click outside to close
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget) {
             setShow(false);
@@ -167,17 +74,26 @@ const NewsView = ({ show, setShow, newsId }) => {
                             {news ? (
                                 <div className='flex flex-col gap-6'>
                                     
-                                    {/* Image */}
+                                    {/* Image Section */}
                                     <div className='w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-md relative group'>
                                         <img 
                                             src={news.image} 
                                             alt={news.title} 
                                             className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-500'
                                         />
-                                        <div className='absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-10'>
+                                        <div className='absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 pt-10 flex gap-2 flex-wrap'>
+                                            
+                                            {/* Category */}
                                             <span className='px-3 py-1 bg-indigo-600 text-white rounded-full text-xs font-bold uppercase tracking-wide shadow-sm'>
-                                                {news.category}
+                                                {formatCategory(news.category)}
                                             </span>
+
+                                            {/* SubCategory */}
+                                            {news.subCategory && (
+                                                <span className='px-3 py-1 bg-pink-600 text-white rounded-full text-xs font-bold uppercase tracking-wide shadow-sm'>
+                                                    {formatCategory(news.subCategory)}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
 
@@ -199,6 +115,26 @@ const NewsView = ({ show, setShow, newsId }) => {
                                         className='prose prose-indigo max-w-none text-gray-700 leading-relaxed' 
                                         dangerouslySetInnerHTML={{__html: news.description}}
                                     ></div>
+
+                                    {/* 👇 NEW: TAGS SECTION */}
+                                    {news.tags && news.tags.length > 0 && (
+                                        <div className='mt-6 pt-6 border-t border-gray-100'>
+                                            <h3 className='text-sm font-bold text-gray-500 uppercase mb-3 flex items-center gap-2'>
+                                                <FaHashtag /> Related Tags
+                                            </h3>
+                                            <div className='flex flex-wrap gap-2'>
+                                                {/* Logic: Agar Array hai to direct map, agar String hai to split karke map */}
+                                                {(Array.isArray(news.tags) ? news.tags : news.tags.split(',')).map((tag, index) => (
+                                                    <span 
+                                                        key={index} 
+                                                        className='px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-default'
+                                                    >
+                                                        #{tag.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
 
                                 </div>
                             ) : (

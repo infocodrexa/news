@@ -85,15 +85,17 @@ const AddWriter = () => {
                         >
                             <option value="">-- Select Category --</option>
                             <option value="All">All</option>
-                            <option value="Education">Education</option>
-                            <option value="Travel">Travel</option>
-                            <option value="Health">Health</option>
-                            <option value="International">International</option>
+                            <option value="Political">Political</option>
                             <option value="Sports">Sports</option>
-                            <option value="Politics">Politics</option>
-                            <option value="Entertainment">Entertainment</option>
+                            <option value="International">International</option>
+                            <option value="Business-&-Economy">Business-&-Economy</option>
+                            <option value="Crime-&-Law">Crime-&-Law</option>
                             <option value="Technology">Technology</option>
-                            <option value="The-Begusarai">The-Begusarai</option>
+                            <option value="Health">Health</option>
+                            <option value="Education-&-Jobs">Education-&-Jobs</option>
+                            <option value="Latest">Latest</option>
+                            <option value="National-News">National-News</option>
+                            <option value="State">State</option>
                         </select>
                     </div>
 

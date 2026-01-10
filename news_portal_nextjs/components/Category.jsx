@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { base_api_url } from '../config/config'
+import { formatCategory } from "@/utils/format";
 
 const Category = async ({ titleStyle }) => {
 
@@ -24,7 +25,7 @@ const Category = async ({ titleStyle }) => {
       >
         {categories && categories.length > 0 && categories.map((item, i) => (
           <li className="list-none" key={i}>
-            <Link href={`/news/category/${item.category}`}>{item.category} ({item.count})</Link>
+            <Link href={`/news/category/${item.category}`}>{formatCategory(item.category)} ({item.count})</Link>
           </li>
         ))}
       </div>

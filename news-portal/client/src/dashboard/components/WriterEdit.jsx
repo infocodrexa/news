@@ -1,118 +1,3 @@
-// import React, { useState, useEffect, useContext } from 'react'
-// import { IoMdClose } from "react-icons/io";
-// import { base_url } from '../../config/config';
-// import axios from 'axios';
-// import storeContext from '../../context/storeContext';
-// import toast from 'react-hot-toast';
-
-// const WriterEdit = ({ show, setShow, writerId, refreshWriters }) => {
-    
-//     const { store } = useContext(storeContext)
-//     const [loader, setLoader] = useState(false)
-    
-//     const [state, setState] = useState({ 
-//         name: '', 
-//         email: '', 
-//         category: '' 
-//     })
-
-//     // Data Prefill karne ke liye Logic (Ye pehle se bhara hua data layega)
-//     useEffect(() => {
-//         if(writerId){
-//             const get_writer = async () => {
-//                 try {
-//                     const { data } = await axios.get(`${base_url}/api/writer/${writerId}`, { headers: { 'Authorization': `Bearer ${store.token}` } })
-//                     setState({ 
-//                         name: data.writer.name, 
-//                         email: data.writer.email, 
-//                         category: data.writer.category 
-//                     })
-//                 } catch (error) { console.log(error) }
-//             }
-//             get_writer()
-//         }
-//     }, [writerId, store.token])
-
-//     const update_writer = async (e) => {
-//         e.preventDefault()
-//         try {
-//             setLoader(true)
-//             const { data } = await axios.put(`${base_url}/api/writer/update/${writerId}`, state, { headers: { 'Authorization': `Bearer ${store.token}` } })
-//             setLoader(false)
-//             toast.success(data.message)
-//             setShow(false)
-//             refreshWriters()
-//         } catch (error) {
-//             setLoader(false)
-//             toast.error(error.response.data.message)
-//         }
-//     }
-
-//     if (!show) return null
-
-//     return (
-//         <div className='fixed top-0 left-0 w-full h-screen z-[9999] bg-black/50 flex justify-center items-center'>
-//             <div className='bg-white w-[500px] rounded-md shadow-lg p-6 relative'>
-//                 <button onClick={() => setShow(false)} className='absolute top-3 right-3 text-2xl hover:text-red-500'><IoMdClose /></button>
-//                 <h2 className='text-xl font-bold mb-5 text-slate-600'>Edit Writer</h2>
-                
-//                 <form onSubmit={update_writer}>
-                    
-//                     {/* NAME INPUT */}
-//                     <div className='mb-4'>
-//                         <label className='block mb-2 font-medium text-slate-600'>Name</label>
-//                         <input 
-//                             value={state.name} 
-//                             onChange={(e) => setState({...state, name: e.target.value})} 
-//                             type="text" 
-//                             placeholder='Writer Name'
-//                             className='w-full px-3 py-2 border rounded outline-none focus:border-green-500' 
-//                             required
-//                         />
-//                     </div>
-
-//                     {/* EMAIL INPUT */}
-//                     <div className='mb-4'>
-//                         <label className='block mb-2 font-medium text-slate-600'>Email</label>
-//                         <input 
-//                             value={state.email} 
-//                             onChange={(e) => setState({...state, email: e.target.value})} 
-//                             type="email" 
-//                             placeholder='Writer Email'
-//                             className='w-full px-3 py-2 border rounded outline-none focus:border-green-500' 
-//                             required
-//                         />
-//                     </div>
-
-//                     {/* 👇 UPDATED: CATEGORY SELECT DROPDOWN */}
-//                     <div className='mb-4'>
-//                         <label className='block mb-2 font-medium text-slate-600'>Category</label>
-//                         <select 
-//                             value={state.category} 
-//                             onChange={(e) => setState({...state, category: e.target.value})} 
-//                             className='w-full px-3 py-2 border rounded outline-none focus:border-green-500 bg-white'
-//                             required
-//                         >
-//                             <option value="">---select category---</option>
-//                             <option value="Education">Education</option>
-//                             <option value="Travel">Travel</option>
-//                             <option value="Health">Health</option>
-//                             <option value="International">International</option>
-//                             <option value="Sports">Sports</option>
-//                             <option value="Technology">Technology</option>
-//                         </select>
-//                     </div>
-
-//                     <button disabled={loader} className='bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 w-full transition-all'>
-//                         {loader ? 'Updating...' : 'Update Writer'}
-//                     </button>
-//                 </form>
-//             </div>
-//         </div>
-//     )
-// }
-
-// export default WriterEdit
 import React, { useState, useEffect, useContext } from 'react';
 import { IoMdClose } from "react-icons/io";
 import { base_url } from '../../config/config';
@@ -246,15 +131,17 @@ const WriterEdit = ({ show, setShow, writerId, refreshWriters }) => {
                                         >
                                             <option value="">-- Select Category --</option>
                                             <option value="All">All</option>
-                                            <option value="Education">Education</option>
-                                            <option value="Travel">Travel</option>
-                                            <option value="Health">Health</option>
-                                            <option value="International">International</option>
+                                            <option value="Political">Political</option>
                                             <option value="Sports">Sports</option>
-                                            <option value="Politics">Politics</option>
-                                            <option value="Entertainment">Entertainment</option>
+                                            <option value="International">International</option>
+                                            <option value="Business-&-Economy">Business-&-Economy</option>
+                                            <option value="Crime-&-Law">Crime-&-Law</option>
                                             <option value="Technology">Technology</option>
-                                            <option value="The-Begusarai">The-Begusarai</option>
+                                            <option value="Health">Health</option>
+                                            <option value="Education-&-Jobs">Education-&-Jobs</option>
+                                            <option value="Latest">Latest</option>
+                                            <option value="National-News">National-News</option>
+                                            <option value="State">State</option>
                                         </select>
                                         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                                             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>

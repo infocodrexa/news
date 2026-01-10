@@ -2,8 +2,6 @@ const production = 'production'
 const local = 'dev'
 const local_api_url = 'http://localhost:5000'
 
-// 🔥 CHANGE 1: 'https' karo
-// 🔥 CHANGE 2: Last se '/api' hata do (Agar laga hai to)
 const production_api_url = 'https://api.thelocalmirror.in' 
 
 const mode = production
@@ -16,3 +14,6 @@ if (mode === production) {
 }
 
 export { base_api_url }
+
+
+

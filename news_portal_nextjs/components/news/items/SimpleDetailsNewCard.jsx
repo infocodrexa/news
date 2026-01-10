@@ -1,13 +1,12 @@
-
 "use client";
 import React from "react";
 import Link from "next/link";
 import { base_api_url } from "@/config/config";
-import moment from "moment"; 
+import moment from "moment";
 const { convert } = require("html-to-text");
+import { formatCategory } from "@/utils/format";
 
 const SimpleDetailsNewCard = ({ news, type, height }) => {
-
   const getImageUrl = (img) => {
     if (!img) return "https://via.placeholder.com/600x400";
     if (img.startsWith("http")) return img;
@@ -19,21 +18,30 @@ const SimpleDetailsNewCard = ({ news, type, height }) => {
     const timeFormat = "D MMM YYYY, h:mm A";
 
     if (news?.updatedAt && news?.createdAt) {
-       // 60 seconds check
-       const diffInSeconds = moment(news.updatedAt).diff(moment(news.createdAt), 'seconds');
-       
-       if (diffInSeconds > 60) {
-          return <span>Updated: {moment(news.updatedAt).format(timeFormat)}</span>;
-       }
+      // 60 seconds check
+      const diffInSeconds = moment(news.updatedAt).diff(
+        moment(news.createdAt),
+        "seconds"
+      );
+
+      if (diffInSeconds > 60) {
+        return (
+          <span>Updated: {moment(news.updatedAt).format(timeFormat)}</span>
+        );
+      }
     }
 
     if (news?.createdAt) {
-       return <span>{moment(news.createdAt).format(timeFormat)}</span>;
+      return <span>{moment(news.createdAt).format(timeFormat)}</span>;
     }
 
     if (news?.date) {
-       const isValidDate = moment(news.date).isValid();
-       return <span>{isValidDate ? moment(news.date).format(timeFormat) : news.date}</span>;
+      const isValidDate = moment(news.date).isValid();
+      return (
+        <span>
+          {isValidDate ? moment(news.date).format(timeFormat) : news.date}
+        </span>
+      );
     }
 
     return <span>Recent</span>;
@@ -57,13 +65,18 @@ const SimpleDetailsNewCard = ({ news, type, height }) => {
             />
           </div>
         </Link>
-        
+
         <div className="w-full h-full block absolute left-0 top-0 invisible group-hover:visible bg-white cursor-pointer opacity-5 transition-all duration-300 pointer-events-none"></div>
 
         <div className="left-5 absolute bottom-4 flex justify-start items-start gap-x-2 text-white font-semibold gap-y-2">
           <div className="px-[6px] py-[2px] rounded-sm text-[13px] bg-[#c80000] uppercase shadow-md">
-            {news?.category || "News"}
+            {formatCategory(news?.category || "News")}
           </div>
+          {(news?.subCategory || news?.subcategory) && (
+            <div className="px-[6px] py-[2px] rounded-sm text-[13px] bg-indigo-600 uppercase shadow-md">
+              {news?.subCategory || news?.subcategory}
+            </div>
+          )}
         </div>
       </div>
 
@@ -77,13 +90,20 @@ const SimpleDetailsNewCard = ({ news, type, height }) => {
         </Link>
 
         <div className="flex gap-x-2 text-xs font-normal text-slate-600 mt-2 mb-2">
-           {displayDate()}
-          <span>{news?.writerName}</span>
+          {displayDate()}
+           <span>
+            <Link
+              href={`/writer/${news.writerId?._id || news.writerId}`}
+             className="font-semibold text-red-700 hover:text-blue-700 hover:underline"
+            >
+              {news.writerName}
+            </Link>
+          </span>
         </div>
 
         {type === "details-news" && (
           <div className="text-sm text-slate-600 pt-2 line-clamp-3">
-             {news?.description ? convert(news?.description) : ""}
+            {news?.description ? convert(news?.description) : ""}
           </div>
         )}
       </div>
