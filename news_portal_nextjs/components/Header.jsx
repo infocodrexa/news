@@ -10,6 +10,7 @@ import { SiThreads } from "react-icons/si";
 import bg_header from "../assets/header-bg.jpg";
 import logo from "../assets/logo.png";
 import Image from "next/image";
+import Link from "next/link"; 
 import Header_Category from "./Header_Category";
 
 const Header = () => {
@@ -46,14 +47,16 @@ const Header = () => {
           <div className='flex justify-center items-center'>
             <div className='w-full flex justify-center'>
                 {/* 512px logo ko hum yahan 140px width par display kar rahe hain taaki header patla rahe */}
-                <Image 
-                  className='w-[140px] h-auto object-contain' 
-                  alt='The Local Mirror Logo' 
-                  src={logo} 
+              <Link href="/" aria-label="Go to Home">
+                <Image
+                  className="w-[140px] h-auto object-contain cursor-pointer"
+                  alt="The Local Mirror Logo"
+                  src={logo}
                   width={140}
                   height={140}
-                  priority 
+                  priority
                 />
+              </Link>
             </div>
           </div>
         </div>

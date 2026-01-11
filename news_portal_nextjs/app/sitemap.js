@@ -1,32 +1,36 @@
-// app/sitemap.js
+// 🔥 CRITICAL FIX: Ye line error hatane ke liye zaroori hai
+export const dynamic = 'force-dynamic';
+
 import { base_api_url } from "@/config/config";
 
-// Simple Sitemap - Fixed for Primary Domain (.in)
 export default async function sitemap() {
-  // 💡 BADLAV: baseUrl ko fix kiya taaki Google hamesha .in ko primary maane
-  const baseUrl = "https://thelocalmirror.in";
+  // Apni Website ka domain yahan check kar lena
+  const baseUrl = "https://thelocalmirror.in"; 
 
-  let newsEntries = [];
   let categoryEntries = [];
+  let newsEntries = [];
 
   try {
-    const res = await fetch(`${base_api_url}/api/all/news`, { cache: 'no-store' });
-    if (!res.ok) throw new Error("API Connection Failed");
-    
+    // API se news fetch karo
+    const res = await fetch(`${base_api_url}/api/all/news`, {
+       cache: 'no-store' // Ensure fresh data
+    });
     const data = await res.json();
-    const allNews = data.news || data;
+    const allNews = data.news || {};
 
-    if (allNews && typeof allNews === 'object') {
+    // Categories aur News ko loop karo
+    if (allNews) {
       Object.keys(allNews).forEach((category) => {
-        // Categories entry
+        
+        // 1. Category Page Entry
         categoryEntries.push({
-          url: `${baseUrl}/category/${category}`,
+          url: `${baseUrl}/news/category/${category}`,
           lastModified: new Date(),
           changeFrequency: 'daily',
           priority: 0.7,
         });
 
-        // News articles entry
+        // 2. News Articles Entry (Aapka Logic)
         if (Array.isArray(allNews[category])) {
           allNews[category].forEach((item) => {
             newsEntries.push({
@@ -39,13 +43,19 @@ export default async function sitemap() {
         }
       });
     }
+
   } catch (error) {
     console.error("Sitemap Error:", error);
   }
 
+  // Final List Return karo
   return [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'always', priority: 1.0 },
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/terms-conditions`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/disclaimer`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
     ...categoryEntries,
     ...newsEntries,
   ];

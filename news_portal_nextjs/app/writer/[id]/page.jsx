@@ -88,34 +88,55 @@ const WriterProfile = async ({ params }) => {
 
                 <div className="flex flex-col gap-y-8">
                   {news && news.length > 0 ? (
-                    news.map((item, i) => (
-                      <div key={i} className="flex flex-col md:flex-row gap-5 border-b pb-8 last:border-0 group">
-                        <div className="w-full md:w-1/3 h-44 overflow-hidden rounded-md shadow-sm">
-                          <Link href={`/news/${item.slug}`}>
-                            <img 
+                    news.map((item, i) => {
+
+                      // 🔥 LOGIC START: Updated vs Created Check
+                      let displayDate;
+                      if (item?.updatedAt && item?.createdAt) {
+                        const diffInSeconds = moment(item.updatedAt).diff(moment(item.createdAt), 'seconds');
+                        
+                        if (diffInSeconds > 60) {
+                          // Agar update hua hai to Red color me "Updated: Date" dikhao
+                          displayDate = <span className="text-red-700 font-medium">Updated: {moment(item.updatedAt).format('LL')}</span>;
+                        } else {
+                          // Agar naya hai to normal Created date
+                          displayDate = <span>{moment(item.createdAt).format('LL')}</span>;
+                        }
+                      } else {
+                        // Fallback purana logic
+                        displayDate = <span>{moment(item.date).format('LL')}</span>;
+                      }
+                      // 🔥 LOGIC END
+
+                      return (
+                        <div key={i} className="flex flex-col md:flex-row gap-5 border-b pb-8 last:border-0 group">
+                          <div className="w-full md:w-1/3 h-44 overflow-hidden rounded-md shadow-sm">
+                            <Link href={`/news/${item.slug}`}>
+                              <img 
                                 src={getImageUrl(item.image)} 
                                 className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500" 
                                 alt={item.title} 
-                            />
-                          </Link>
-                        </div>
-                        <div className="w-full md:w-2/3 flex flex-col justify-between">
-                          <div>
-                            <Link href={`/news/${item.slug}`} className="text-xl font-bold text-gray-800 hover:text-red-700 leading-tight transition-colors">
-                              {item.title}
+                              />
                             </Link>
-                            <p className="text-sm text-gray-500 mt-3 line-clamp-3 leading-relaxed">
-                               {item.description?.replace(/<[^>]*>?/gm, '').substring(0, 150)}...
-                            </p>
                           </div>
-                          <div className="flex items-center gap-3 mt-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                            <span className="text-red-700">{formatCategory(item?.category)}</span>
-                            <span>•</span>
-                            <span className="flex items-center gap-1">{moment(item.date).format('LL')}</span>
+                          <div className="w-full md:w-2/3 flex flex-col justify-between">
+                            <div>
+                              <Link href={`/news/${item.slug}`} className="text-xl font-bold text-gray-800 hover:text-red-700 leading-tight transition-colors">
+                                {item.title}
+                              </Link>
+                              <p className="text-sm text-gray-500 mt-3 line-clamp-3 leading-relaxed">
+                                 {item.description?.replace(/<[^>]*>?/gm, '').substring(0, 150)}...
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-3 mt-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                              <span className="text-red-700">{formatCategory(item?.category)}</span>
+                              <span>•</span>
+                              <span className="flex items-center gap-1">{displayDate}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
                     <div className="text-center py-10 text-gray-400">No news published yet.</div>
                   )}
