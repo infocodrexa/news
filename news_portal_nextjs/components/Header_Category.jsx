@@ -8,7 +8,6 @@ import { BsList } from 'react-icons/bs'
 import { base_api_url } from '../config/config'
 import { formatCategory } from "@/utils/format";
 
-
 const Header_Category = () => {
     const router = useRouter()
     const path = usePathname()
@@ -42,11 +41,10 @@ const Header_Category = () => {
 
     return (
         <div className='w-full font-sans sticky top-0 z-[100]'>
-            {/* 🔴 Headline Bar - Yeh hamesha RED rahega */}
             <div className='bg-[#c80000] w-full text-white uppercase font-semibold relative shadow-md'>
                 <div className='px-4 md:px-8 flex justify-between items-center h-[52px]'>
                     
-                    {/* 📱 Mobile Menu Icon */}
+                    {/* Mobile Menu Icon */}
                     <div 
                         onClick={() => {
                             setMobileMenuShow(!mobileMenuShow)
@@ -58,7 +56,7 @@ const Header_Category = () => {
                         <span className='text-[10px]'>Menu</span>
                     </div>
 
-                    {/* 💻 Desktop Menu */}
+                    {/* Desktop Menu */}
                     <div className='hidden lg:flex items-center flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide'>
                         <Link 
                             className={`px-5 py-[15px] border-b-4 border-transparent hover:bg-black/10 transition-all ${path === '/' ? 'border-white bg-black/10' : ''}`} 
@@ -69,16 +67,16 @@ const Header_Category = () => {
                         {categories?.length > 0 && categories.map((c, i) => (
                             <Link 
                                 key={i} 
+                                // ✅ URL FIX: Purana '/news/category/' hata diya
                                 className={`px-5 py-[15px] border-b-4 border-transparent hover:bg-black/10 transition-all ${decodeURIComponent(path).includes(c.category) ? 'border-white bg-black/10' : ''}`} 
-                                href={`/news/category/${c.category}`}
+                                href={`/${c.category}`}
                             >
                                 {formatCategory(c.category)}
-                                {/* {c.category} */}
                             </Link>
                         ))}
                     </div>
 
-                    {/* 🔍 Search Icon */}
+                    {/* Search Icon */}
                     <div className='flex items-center'>
                         <div 
                             onClick={() => {
@@ -92,7 +90,7 @@ const Header_Category = () => {
                     </div>
                 </div>
 
-                {/* 🔎 Search Bar Dropdown (White Background for clarity) */}
+                {/* Search Bar Dropdown */}
                 <div className={`absolute left-0 right-0 top-[52px] w-full bg-white shadow-2xl z-[60] p-4 transition-all duration-300 ${showSearch ? 'translate-y-0 opacity-100 visible' : '-translate-y-4 opacity-0 invisible'}`}>
                     <form onSubmit={handleSearch} className='max-w-[800px] mx-auto flex border-2 border-[#c80000] rounded-lg overflow-hidden shadow-sm'>
                         <input 
@@ -109,7 +107,7 @@ const Header_Category = () => {
                     </form>
                 </div>
 
-                {/* ⚪ Mobile Categories - Niche khulne par WHITE Background */}
+                {/* Mobile Categories Dropdown */}
                 <div className={`absolute left-0 right-0 top-[52px] w-full bg-white z-[55] shadow-2xl lg:hidden transition-all duration-300 overflow-hidden ${mobileMenuShow ? 'max-h-[60vh] opacity-100 visible' : 'max-h-0 opacity-0 invisible'}`}>
                     <div className='flex flex-col border-t border-slate-100 overflow-y-auto max-h-[55vh]'>
                         <Link 
@@ -123,8 +121,9 @@ const Header_Category = () => {
                             <Link 
                                 key={i}
                                 onClick={() => setMobileMenuShow(false)} 
+                                // ✅ URL FIX: Purana '/news/category/' hata diya
                                 className={`p-4 text-sm font-bold border-b border-slate-50 transition-colors active:bg-slate-100 ${decodeURIComponent(path).includes(c.category) ? 'text-[#c80000] bg-slate-50' : 'text-slate-700'}`} 
-                                href={`/news/category/${c.category}`}
+                                href={`/${c.category}`}
                             >
                                 {formatCategory(c.category)}
                             </Link>

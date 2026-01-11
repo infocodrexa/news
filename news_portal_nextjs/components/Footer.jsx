@@ -64,6 +64,11 @@ const Footer = () => {
             </h3>
           </div>
           <ul className="flex flex-col gap-y-3 text-sm text-gray-400">
+                    <li>
+              <Link href="/" className="hover:text-[#c80000] hover:translate-x-1 transition-all duration-300 flex items-center gap-2">
+                <FaChevronRight size={10} aria-hidden="true" /> Home
+              </Link>
+            </li>
             <li>
               <Link href="/about" className="hover:text-[#c80000] hover:translate-x-1 transition-all duration-300 flex items-center gap-2">
                 <FaChevronRight size={10} aria-hidden="true" /> About Us

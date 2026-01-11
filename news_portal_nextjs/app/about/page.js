@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FaUserTie, FaBuilding, FaCheckCircle, FaBalanceScale, FaMapMarkedAlt } from "react-icons/fa";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "About Us - The Local Mirror | National & Regional News Network",
@@ -137,6 +138,7 @@ export default function About() {
         </div>
 
       </div>
+      <Footer/>
     </div>
   );
 }
