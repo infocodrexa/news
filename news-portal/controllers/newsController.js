@@ -53,9 +53,9 @@ class newsController {
         .replace(/-+/g, "-");
 
       // 🔥 TAGS LOGIC (Safe Check)
-      let tagsArray = [];
+     let tagsArray = [];
       if (tags && typeof tags === "string" && tags.trim().length > 0) {
-        tagsArray = tags.split(",").map((tag) => tag.trim());
+        tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase().replace(/\s+/g, '-')).filter((tag) => tag !== "");
       }
 
       // CREATE NEWS
@@ -137,9 +137,9 @@ class newsController {
         .replace(/\s+/g, "-") // Space ko dash
         .replace(/-+/g, "-"); // Double dash fix
 
-      let tagsArray = tags;
-      if (tags && typeof tags === "string") {
-        tagsArray = tags.split(",").map((tag) => tag.trim());
+      let tagsArray = [];
+      if (tags && typeof tags === "string" && tags.trim().length > 0) {
+        tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase().replace(/\s+/g, '-')).filter((tag) => tag !== "");
       }
       // 3. Update Database
       const news = await newsModel.findByIdAndUpdate(
@@ -228,6 +228,30 @@ class newsController {
       }
     } catch (error) {
       console.log(error.message);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  };
+
+  delete_gallery_image = async (req, res) => {
+    const { image_id } = req.params;
+    try {
+      const image = await galleryModel.findById(image_id);
+      if (!image) {
+        return res.status(404).json({ message: "Image not found in gallery" });
+      }
+
+      const imageName = image.url.split("/").pop();
+      const filePath = path.join(__dirname, "../../uploads", imageName);
+
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+
+      await galleryModel.findByIdAndDelete(image_id);
+
+      return res.status(200).json({ message: "Gallery image deleted successfully" });
+    } catch (error) {
+      console.log("Delete Image Error:", error.message);
       return res.status(500).json({ message: "Internal server error" });
     }
   };
@@ -329,15 +353,16 @@ class newsController {
     }
   };
 
-  get_tag_news = async (req, res) => {
+ get_tag_news = async (req, res) => {
     const { tag } = req.params;
+    const formattedTag = tag.trim().replace(/[\s-]+/g, '[\\s-]+');
     try {
       const news = await newsModel
         .find({
           status: "active",
           // ✅ 2. Regex use karo ($in ki jagah)
           // Isse 'Cricket' aur 'cricket' dono match honge
-          tags: { $regex: tag, $options: "i" },
+          tags: { $regex: formattedTag, $options: "i" },
         })
         .sort({ createdAt: -1 });
 
@@ -543,7 +568,7 @@ get_all_news = async (req, res) => {
         { slug, status: "active" },
         { $inc: { count: 1 } },
         { new: true, timestamps: false } 
-      );
+      ).populate('writerId', 'image name');
 
       // Agar news nahi mili ya active nahi hai
       if (!news) {
@@ -558,7 +583,7 @@ get_all_news = async (req, res) => {
             { category: { $eq: news.category } }, // Same category
             { status: "active" },               // Extra condition
           ],
-        })
+        }).populate('writerId', 'image name')
         .limit(4)
         .sort({ createdAt: -1 });
 

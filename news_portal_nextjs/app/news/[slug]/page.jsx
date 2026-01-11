@@ -141,13 +141,10 @@ const Details = async ({ params }) => {
         {/* Adjusted padding here to make it slightly compact */}
         <div className="px-4 md:px-8 w-full py-6">
           <div className="flex flex-wrap">
-            
             {/* ===== LEFT (NEWS CONTENT) ===== */}
             <div className="w-full xl:w-8/12 pr-0 xl:pr-4">
-              
               {/* Card Style: Rounded + Shadow + White BG */}
               <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                
                 {/* Image: Natural Height */}
                 <img
                   src={getImageUrl(news?.image)}
@@ -157,7 +154,6 @@ const Details = async ({ params }) => {
 
                 {/* Content Area: Reduced Padding (p-5 instead of p-6/8) */}
                 <div className="p-5 mt-2">
-                  
                   {/* Category */}
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-red-700 uppercase font-medium text-xl">
@@ -182,21 +178,23 @@ const Details = async ({ params }) => {
                       <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-lg uppercase">
                         {news.writerName ? news.writerName.charAt(0) : "A"}
                       </div>
-                      
+
                       {/* Author Name */}
                       <div className="flex flex-col">
                         <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">
                           Written By
                         </span>
                         <Link
-                          href={`/writer/${news.writerId?._id || news.writerId}`}
+                          href={`/writer/${
+                            news.writerId?._id || news.writerId
+                          }`}
                           className="font-bold text-gray-800 hover:text-red-600 transition-colors text-sm"
                         >
                           {news.writerName}
                         </Link>
                       </div>
                     </div>
-                    
+
                     {/* Date Display (No Slash) */}
                     <div>{dateDisplay}</div>
                   </div>
@@ -216,18 +214,30 @@ const Details = async ({ params }) => {
                         Tags:
                       </span>
                       <div className="flex flex-wrap items-center gap-2">
-                        {news.tags
-                          .toString()
-                          .split(",")
-                          .map((tag, i) => (
-                            <Link
-                              key={i}
-                              href={`/tag/${tag.trim()}`}
-                              className="bg-gray-100 border border-gray-200 text-gray-600 hover:bg-[#c80000] hover:text-white hover:border-[#c80000] px-4 py-1.5 rounded-full text-sm transition-all duration-200 font-medium"
-                            >
-                              #{tag.trim()}
-                            </Link>
-                          ))}
+                        {news?.tags &&
+                          (() => {
+                            let tagList = [];
+                            if (Array.isArray(news.tags)) {
+                              tagList = news.tags;
+                            } else if (typeof news.tags === "string") {
+                              tagList = news.tags.split(",");
+                            }
+
+                            return tagList.map((tag, i) => {
+                              const cleanTag = tag?.toString().trim();
+                              if (!cleanTag) return null;
+
+                              return (
+                                <Link
+                                  key={i}
+                                  href={`/tag/${cleanTag.replace(/\s+/g, "-")}`}
+                                  className="bg-gray-100 border border-gray-200 text-gray-600 hover:bg-[#c80000] hover:text-white hover:border-[#c80000] px-4 py-1.5 rounded-full text-sm transition-all duration-200 font-medium capitalize"
+                                >
+                                  #{cleanTag.replace(/-/g, " ")}
+                                </Link>
+                              );
+                            });
+                          })()}
                       </div>
                     </div>
                   )}
@@ -259,7 +269,6 @@ const Details = async ({ params }) => {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

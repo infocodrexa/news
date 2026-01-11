@@ -53,7 +53,7 @@ const TrendingTags = ({ news }) => {
               // isme whitespace-nowrap zaroori hai taaki tag tut kar do line me na aaye
               className="px-3 py-1 bg-gray-50 border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all duration-200 whitespace-nowrap shadow-sm"
             >
-              #{tag}
+              #{tag.replace(/-/g, ' ')}
             </Link>
           ))}
         </div>

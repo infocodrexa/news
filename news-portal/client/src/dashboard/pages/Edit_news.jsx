@@ -36,7 +36,7 @@ const Edit_news = () => {
     const [imagesLoader, setImagesLoader] = useState(false);
 
     const categories = [
-        'All', 'Political', 'Sports', 'International', 'Business-&-Economy', 'Crime-&-Law', 'Technology', 'Health', 'Education-&-Jobs', 'Latest', 'National-News', 'State'
+        'Political', 'Sports', 'World', 'Business-&-Economy', 'Crime-&-Law', 'Technology', 'Health', 'Education-&-Jobs', 'Latest', 'National-News', 'State'
     ];
 
     // --- SLUG GENERATOR ---

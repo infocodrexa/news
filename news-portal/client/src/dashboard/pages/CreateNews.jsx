@@ -32,7 +32,7 @@ const CreateNews = () => {
     const [imagesLoader, setImagesLoader] = useState(false);
 
     const categories = [
-      'All' , 'Political', 'Sports', 'International', 'Business-&-Economy', 'Crime-&-Law', 'Technology', 'Health' , 'Education-&-Jobs' , 'Latest' ,'National-News','State'
+        'Political', 'Sports', 'World', 'Business-&-Economy', 'Crime-&-Law', 'Technology', 'Health' , 'Education-&-Jobs' , 'Latest' ,'National-News','State'
     ];
 
     const get_images = async () => {
@@ -43,6 +43,21 @@ const CreateNews = () => {
             setImages(data.images);
         } catch (error) { console.log(error) }
     };
+
+
+    const deleteImage = async (id) => {
+        try {
+            const { data } = await axios.delete(`${base_url}/api/images/delete/${id}`, {
+                headers: { "Authorization": `Bearer ${store.token}` }
+            });
+            
+            // State se turant delete karein taaki gallery refresh ho jaye
+            setImages(images.filter(img => img._id !== id));
+            toast.success(data.message);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Error deleting image");
+        }
+};
 
     useEffect(() => { get_images() }, []);
 
@@ -300,7 +315,7 @@ const CreateNews = () => {
             </form>
             
             <input onChange={imageHandler} type="file" multiple id='images' className='hidden' />
-            {show && <Galler setShow={setShow} images={images} />}
+            {show && <Galler setShow={setShow} images={images}  deleteImage={deleteImage}/>}
         </motion.div>
     );
 };

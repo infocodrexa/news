@@ -56,6 +56,7 @@ router.put('/api/news/status-update/:news_id', middleware.auth, newsController.u
 router.delete('/api/news/delete/:news_id', middleware.auth, newsController.news_delete)
 
 router.get('/api/images', middleware.auth, newsController.get_images)
+router.delete('/api/images/delete/:image_id', middleware.auth, newsController.delete_gallery_image)
 
 // 👉 4. Add Gallery Images (Middleware: upload.array for multiple files)
 router.post('/api/images/add', middleware.auth, upload.array('images', 10), newsController.add_images)

@@ -130,10 +130,9 @@ const WriterEdit = ({ show, setShow, writerId, refreshWriters }) => {
                                             required
                                         >
                                             <option value="">-- Select Category --</option>
-                                            <option value="All">All</option>
                                             <option value="Political">Political</option>
                                             <option value="Sports">Sports</option>
-                                            <option value="International">International</option>
+                                            <option value="World">World</option>
                                             <option value="Business-&-Economy">Business-&-Economy</option>
                                             <option value="Crime-&-Law">Crime-&-Law</option>
                                             <option value="Technology">Technology</option>
