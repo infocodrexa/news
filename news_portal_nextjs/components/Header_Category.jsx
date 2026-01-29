@@ -41,6 +41,18 @@ const Header_Category = () => {
 
     return (
         <div className='w-full font-sans sticky top-0 z-[100]'>
+            
+            {/* 🔥 CHANGE: Yahan Maine CSS inject kiya hai taaki Global CSS use na karni pade */}
+            <style jsx>{`
+                .no-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+                .no-scrollbar {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            `}</style>
+
             <div className='bg-[#c80000] w-full text-white uppercase font-semibold relative shadow-md'>
                 <div className='px-4 md:px-8 flex justify-between items-center h-[52px]'>
                     
@@ -53,11 +65,12 @@ const Header_Category = () => {
                         className='lg:hidden flex items-center gap-1 cursor-pointer p-2 rounded-md active:bg-black/20'
                     >
                         {mobileMenuShow ? <IoClose size={24} /> : <BsList size={24} />}
-                        <span className='text-[10px]'>Menu</span>
+                         <span className='text-[10px] font-bold tracking-wider'>MENU</span>
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className='hidden lg:flex items-center flex-1 overflow-x-auto whitespace-nowrap scrollbar-hide'>
+                    {/* 🔥 CHANGE: 'scrollbar-hide' ki jagah 'no-scrollbar' class lagayi hai jo upar define ki hai */}
+                    <div className='hidden lg:flex items-center flex-1 overflow-x-auto whitespace-nowrap no-scrollbar'>
                         <Link 
                             className={`px-5 py-[15px] border-b-4 border-transparent hover:bg-black/10 transition-all ${path === '/' ? 'border-white bg-black/10' : ''}`} 
                             href={'/'}
@@ -67,7 +80,6 @@ const Header_Category = () => {
                         {categories?.length > 0 && categories.map((c, i) => (
                             <Link 
                                 key={i} 
-                                // ✅ URL FIX: Purana '/news/category/' hata diya
                                 className={`px-5 py-[15px] border-b-4 border-transparent hover:bg-black/10 transition-all ${decodeURIComponent(path).includes(c.category) ? 'border-white bg-black/10' : ''}`} 
                                 href={`/${c.category}`}
                             >
@@ -121,7 +133,6 @@ const Header_Category = () => {
                             <Link 
                                 key={i}
                                 onClick={() => setMobileMenuShow(false)} 
-                                // ✅ URL FIX: Purana '/news/category/' hata diya
                                 className={`p-4 text-sm font-bold border-b border-slate-50 transition-colors active:bg-slate-100 ${decodeURIComponent(path).includes(c.category) ? 'text-[#c80000] bg-slate-50' : 'text-slate-700'}`} 
                                 href={`/${c.category}`}
                             >

@@ -1,5 +1,6 @@
 //slider
 
+
 export const dynamic = "force-dynamic";
 import Breadcrumb from "@/components/Breadcrumb";
 import Category from "@/components/Category";
@@ -68,21 +69,23 @@ const Details = async ({ params }) => {
   let dateDisplay = null;
 
   if (news?.updatedAt && news?.createdAt) {
+    // Calculate difference in seconds
     const diffInSeconds = moment(news.updatedAt).diff(
       moment(news.createdAt),
       "seconds"
     );
 
+    // Agar 60 seconds se zyada ka fark hai, tabhi Update maano
     if (diffInSeconds > 60) {
       dateDisplay = (
-        <span className="text-gray-500 font-medium text-xs flex items-center gap-1">
+        <span className="text-gray-600 font-medium text-sm flex items-center gap-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-3.5 h-3.5"
+            className="w-4 h-4"
           >
             <path
               strokeLinecap="round"
@@ -98,14 +101,14 @@ const Details = async ({ params }) => {
 
   if (!dateDisplay && news?.createdAt) {
     dateDisplay = (
-      <span className="text-gray-500 text-xs flex items-center gap-1">
+      <span className="text-gray-600 text-sm flex items-center gap-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-3.5 h-3.5"
+          className="w-4 h-4"
         >
           <path
             strokeLinecap="round"
@@ -116,156 +119,206 @@ const Details = async ({ params }) => {
         {moment(news.createdAt).format(timeFormat)}
       </span>
     );
-  } else if (!dateDisplay && news?.date) {
+  }
+
+  // Fallback
+  else if (!dateDisplay && news?.date) {
     dateDisplay = moment(news.date).isValid()
       ? moment(news.date).format(timeFormat)
       : news.date;
   }
 
   return (
-    <div>
+    <div className="bg-gray-50 min-h-screen">
       {/* ===== TOP ===== */}
-      <div className="bg-white shadow-sm py-4">
-        <div className="px-4 md:px-8 w-full">
+      <div className="bg-white border-b border-gray-200">
+        <div className="px-4 md:px-8 w-full py-4">
           <Breadcrumb one={news?.category} two={news?.title} />
         </div>
       </div>
 
-      {/* 🟢 AD SPACE 1 */}
-      {/* <div className="container mx-auto px-4 md:px-8">
+      {/* 🟢 AD SPACE 1: Title se pehle bada banner */}
+      {/* <div className="container mx-auto px-4 md:px-8 mt-6">
          <GoogleAdPlaceholder type="banner" />
       </div> */}
 
       {/* ===== MAIN ===== */}
-      <div className="bg-slate-200 w-full">
-        {/* Adjusted padding here to make it slightly compact */}
-        <div className="px-4 md:px-8 w-full py-6">
-          <div className="flex flex-wrap">
+      <div className="w-full py-8 md:py-10">
+        <div className="px-4 md:px-8 w-full max-w-[1440px] mx-auto">
+          <div className="flex flex-wrap gap-y-8">
             {/* ===== LEFT (NEWS CONTENT) ===== */}
-            <div className="w-full xl:w-8/12 pr-0 xl:pr-4">
-              {/* Card Style: Rounded + Shadow + White BG */}
+            <div className="w-full xl:w-8/12 pr-0 xl:pr-8">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                {/* Image: Natural Height */}
-                <img
-                  src={getImageUrl(news?.image)}
-                  alt={news?.title}
-                  className="w-full h-auto object-cover"
-                />
+                {/* Image Section */}
+                <div className="relative w-full h-[300px] md:h-[500px]">
+                  <img
+                    src={getImageUrl(news?.image)}
+                    alt={news?.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
 
-                {/* Content Area: Reduced Padding (p-5 instead of p-6/8) */}
-                <div className="p-5 mt-2">
-                  {/* Category */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-red-700 uppercase font-medium text-xl">
+                {/* 🔥 Padding reduced here (p-5 md:p-8) */}
+                <div className="p-5 md:p-8">
+                  {/* Category & Badges */}
+                  <div className="flex items-center flex-wrap gap-3 mb-4">
+                    <span className="bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
                       {formatCategory(news?.category)}
-                    </h3>
+                    </span>
+
+                    {/* SubCategory agar available ho tabhi dikhega */}
                     {news?.subCategory && (
-                      <span className="text-gray-500 font-bold text-lg uppercase">
-                        - {news?.subCategory}
+                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold uppercase border border-gray-200">
+                        {news?.subCategory}
                       </span>
                     )}
                   </div>
 
-                  {/* Title */}
-                  <h2 className="text-3xl text-gray-700 font-bold leading-[1.8] mb-4">
-                    {news?.title}
-                  </h2>
+                  {/* Title (🔥 Line height fixed: leading-snug) */}
 
-                  {/* 🔥 AUTHOR PROFILE + DATE SECTION (Fixed Slash & Added Profile Image) */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
-                    <div className="flex items-center gap-3">
-                      {/* Profile Image Circle */}
+                  <h1
+                    className="news-title text-2xl md:text-3xl lg:text-[32px] 
+                       text-gray-900 font-extrabold mb-3"
+                  >
+                    {news?.title}
+                  </h1>
+
+                  {/* Author & Date Meta Row */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-gray-100 pb-3 mb-4">
+                    {/* <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-lg uppercase">
                         {news.writerName ? news.writerName.charAt(0) : "A"}
                       </div>
-
-                      {/* Author Name */}
                       <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">
+                        <span className="text-xs text-gray-500 uppercase font-semibold">
                           Written By
                         </span>
                         <Link
                           href={`/writer/${
                             news.writerId?._id || news.writerId
                           }`}
-                          className="font-bold text-gray-800 hover:text-red-600 transition-colors text-sm"
+                          className="font-bold text-gray-800 hover:text-red-600 transition-colors"
+                        >
+                          {news.writerName}
+                        </Link>
+                      </div>
+                    </div> */}
+
+                    <div className="flex items-center gap-3">
+                      {news?.writerId?.image ? (
+                        <img
+                          src={news.writerId.image}
+                          alt={news.writerName}
+                          className="w-10 h-10 rounded-full object-cover border border-red-100"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-lg uppercase">
+                          {news?.writerName ? news.writerName.charAt(0) : "A"}
+                        </div>
+                      )}
+
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-500 uppercase font-semibold">
+                          Written By
+                        </span>
+                        <Link
+                          href={`/writer/${
+                            news.writerId?._id || news.writerId
+                          }`}
+                          className="font-bold text-gray-800 hover:text-red-600 transition-colors"
                         >
                           {news.writerName}
                         </Link>
                       </div>
                     </div>
 
-                    {/* Date Display (No Slash) */}
-                    <div>{dateDisplay}</div>
+                    <div className="flex items-center gap-2">{dateDisplay}</div>
                   </div>
 
-                  {/* 🟢 AD SPACE 2 */}
+                  {/* 🟢 AD SPACE 2: Content shuru hone se pehle */}
                   {/* <GoogleAdPlaceholder type="inContent" /> */}
 
-                  {/* Description */}
-                  <div className="text-[#333333] leading-relaxed news-content space-y-2">
+                  <div className="news-content">
                     {htmlParser(news?.description)}
                   </div>
 
-                  {/* Tags */}
+                  {/* Tags Section */}
                   {news?.tags && news.tags.length > 0 && (
-                    <div className="mt-6 pt-4 border-t border-gray-100">
-                      <span className="text-sm font-bold text-gray-700 mb-2 block">
-                        Tags:
-                      </span>
+                    <div className="mt-10 pt-6 border-t border-gray-100">
+                      <div className="flex items-center gap-2 mb-4">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-5 h-5 text-red-600"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.593l6.002-2.002c.762-.255 1.144-1.056.894-1.802l-1.92-5.76a2.25 2.25 0 0 0-1.76-1.52l-5.625-1.875a1.714 1.714 0 0 0-.583-.106Zm1.84 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                          />
+                        </svg>
+                        <span className="text-base font-bold text-gray-900">
+                          Related Topics:
+                        </span>
+                      </div>
                       <div className="flex flex-wrap items-center gap-2">
-                        {news?.tags &&
-                          (() => {
-                            let tagList = [];
-                            if (Array.isArray(news.tags)) {
-                              tagList = news.tags;
-                            } else if (typeof news.tags === "string") {
-                              tagList = news.tags.split(",");
-                            }
-
-                            return tagList.map((tag, i) => {
-                              const cleanTag = tag?.toString().trim();
-                              if (!cleanTag) return null;
-
-                              return (
-                                <Link
-                                  key={i}
-                                  href={`/tag/${cleanTag.replace(/\s+/g, "-")}`}
-                                  className="bg-gray-100 border border-gray-200 text-gray-600 hover:bg-[#c80000] hover:text-white hover:border-[#c80000] px-4 py-1.5 rounded-full text-sm transition-all duration-200 font-medium capitalize"
-                                >
-                                  #{cleanTag.replace(/-/g, " ")}
-                                </Link>
-                              );
-                            });
-                          })()}
+                        {news.tags
+                          .toString()
+                          .split(",")
+                          .map((tag, i) => (
+                            <Link
+                              key={i}
+                              href={`/tag/${tag.trim()}`}
+                              className="bg-gray-100 border border-transparent text-gray-600 hover:bg-red-600 hover:text-white hover:shadow-md px-4 py-2 rounded-full text-sm transition-all duration-300 font-medium"
+                            >
+                              #{tag.trim()}
+                            </Link>
+                          ))}
                       </div>
                     </div>
                   )}
 
-                  <div className="mt-6">
+                  <div className="mt-8">
                     <ShareBar title={news?.title} slug={news?.slug} />
                   </div>
                 </div>
 
-                {/* 🟢 AD SPACE 3 */}
-                <div className="px-5">
+                {/* 🟢 AD SPACE 3: Article khatam hone ke baad */}
+                <div className="px-6 md:px-10 pb-6">
                   {/* <GoogleAdPlaceholder type="inContent" /> */}
                 </div>
 
-                <div className="pt-6 px-5 pb-6 border-t">
-                  <RelatedNews news={relateNews} type="Related news" />
+                <div className="bg-gray-50 p-6 md:p-8 border-t border-gray-200">
+                  <RelatedNews news={relateNews} />
                 </div>
               </div>
             </div>
 
             {/* ===== RIGHT (SIDEBAR) ===== */}
-            <div className="w-full xl:w-4/12 pl-0 xl:pl-4 mt-8 xl:mt-0">
-              <div className="flex flex-col gap-y-6 sticky top-4">
-                <Search />
+            <div className="w-full xl:w-4/12 pl-0 xl:pl-4">
+              <div className="flex flex-col gap-y-8 sticky top-4">
+                {/* Search Box Container */}
+                <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                  <Search />
+                </div>
+
+                {/* 🟢 AD SPACE 4: Sidebar Top */}
                 {/* <GoogleAdPlaceholder type="sidebar" /> */}
-                <RecentNews />
-                <div className="p-4 bg-white rounded-xl shadow-md border border-gray-100">
-                  <Category titleStyle={"text-gray-700 font-bold"} />
+
+                <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                  <RecentNews />
+                </div>
+
+                <div className="p-6 bg-white rounded-xl shadow-md border border-gray-100">
+                  <Category
+                    titleStyle={
+                      "text-xl font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2"
+                    }
+                  />
                 </div>
               </div>
             </div>

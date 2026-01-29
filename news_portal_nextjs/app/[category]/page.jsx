@@ -11,7 +11,7 @@ import { base_api_url } from "@/config/config";
 import Footer from "@/components/Footer";
 import Pagination from "@/components/Pagination"; 
 import GoogleAdPlaceholder from "@/components/ads/GoogleAdPlaceholder"; 
-import { notFound } from "next/navigation"; // ✅ ADDED: Galat URL par 404 dikhane ke liye
+import { notFound } from "next/navigation"; 
 
 const CategoryNews = async ({ params, searchParams }) => {
   const { category } = params;
@@ -91,7 +91,7 @@ const CategoryNews = async ({ params, searchParams }) => {
               <div className="w-full pr-0 xl:pr-4">
                 
                 {/* ✅ AD SPACE: News se pehle Ad */}
-                <GoogleAdPlaceholder type="inContent" />
+                {/* <GoogleAdPlaceholder type="inContent" /> */}
 
                 {/* News Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -129,7 +129,7 @@ const CategoryNews = async ({ params, searchParams }) => {
                   
                   {/* ✅ AD SPACE: Sidebar me Category ki jagah Ad */}
                   <div className="p-4 bg-white">
-                    <GoogleAdPlaceholder type="sidebar" />
+                    {/* <GoogleAdPlaceholder type="sidebar" /> */}
                   </div>
                 </div>
               </div>
@@ -142,7 +142,7 @@ const CategoryNews = async ({ params, searchParams }) => {
 
           {/* ✅ AD SPACE: Footer se pehle Banner Ad */}
           <div className="mt-8">
-             <GoogleAdPlaceholder type="banner" />
+             {/* <GoogleAdPlaceholder type="banner" /> */}
           </div>
           
         </div>

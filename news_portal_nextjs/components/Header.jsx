@@ -16,7 +16,7 @@ import Header_Category from "./Header_Category";
 const Header = () => {
   return (
     <header className="w-full">
-      {/* Top Bar: Patli padding (py-0.5) */}
+      {/* Top Bar */}
       <div className="px-5 lg:px-8 flex justify-between items-center bg-[#333333] text-[#cccccc] py-0.5">
         <span className="text-[11px] sm:text-[12px] font-medium">
           {moment().format("LLLL")}
@@ -41,12 +41,11 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Main Logo Section: Height minimized for 512px source */}
+      {/* Main Logo Section */}
       <div style={{ backgroundImage: `url(${bg_header.src})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="px-8 py-1.5"> 
           <div className='flex justify-center items-center'>
             <div className='w-full flex justify-center'>
-                {/* 512px logo ko hum yahan 140px width par display kar rahe hain taaki header patla rahe */}
               <Link href="/" aria-label="Go to Home">
                 <Image
                   className="w-[140px] h-auto object-contain cursor-pointer"
